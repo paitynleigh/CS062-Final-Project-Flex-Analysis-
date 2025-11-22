@@ -5,7 +5,7 @@ public class TestFlex {
     public static void main(String[] args){
         Flex testFlex = new Flex();
 
-        testFlex.loadCSV("Data/Stored_Value_Transaction_by_Customer__11_39_2025-10-17_11_40_52(Stored_Value_Transaction_by_Cus).csvnull");
+        testFlex.loadCSV("Data/Stored_Value_Transaction_by_Customer__11_39_2025-10-17_11_40_52(Stored_Value_Transaction_by_Cus).csv");
 
         Map<String, Map<String, List<Transaction>>> data = testFlex.getData();
 
