@@ -1,16 +1,16 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.io.*;
 
 
 public class Flex {
-    private Map<String, Map<String, List<Transaction>>> data;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy HH:mm");
+    private FrequencyData freqData;
+    private TimeData timeData;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm");
 
     public Flex(){
-        data = new HashMap<>();
-
+        freqData = new FrequencyData();
+        timeData = new TimeData();
     }
 
     public void rowParse(String line){
@@ -26,28 +26,22 @@ public class Flex {
         //Format Date Correctly
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 
-        // Add new Location or update map of existing location
-        if(!data.containsKey(location)){
-            data.put(location, new HashMap<String, List<Transaction>>());
-        }
-
-        Map<String, List<Transaction>> schoolMap = data.get(location);
-
-        // Add new School or update map of existing school
-        if(!schoolMap.containsKey(school)){
-            schoolMap.put(school, new ArrayList<>());
-        }
-
-        List<Transaction> list = schoolMap.get(school);
-
         //Create Transaction
         Transaction t = new Transaction(dateTime, amount, location, school);
-        list.add(t);
+
+        //--- Frequency/School/Location (Flex Overview)---//
+        freqData.add(t);
+
+        //--- Day-Time Analysis (Feature 1)
+        timeData.add(t);
     }
 
     public void loadCSV(String filename){
         try(BufferedReader br = new BufferedReader(new FileReader(filename))){
             String line;
+
+            //read first line 
+            br.readLine();
 
             while((line = br.readLine()) != null){
                 if(!line.trim().isEmpty()){
@@ -60,12 +54,14 @@ public class Flex {
     }
 
     /* 
-    *
-    * Getter Method for data
+    * Getter Methods for data
     */
-     public Map<String, Map<String, List<Transaction>>> getData() {
-        return data;
-    }
 
+    public FrequencyData getFreqData(){
+        return freqData;
+    }
+    public TimeData getTimeData(){
+        return timeData;
+    }
 }
 

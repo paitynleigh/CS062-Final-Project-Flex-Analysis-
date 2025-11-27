@@ -1,0 +1,14 @@
+/*
+*
+* Prints the location and then prints the amount of transactions 
+* from students at each of the schools. Doesnt print 0 if there 
+* are no transactions from a school at that location. 
+*/
+
+for (String loc : data.keySet()) {
+    System.out.println("Location: [" + loc + "]");
+    Map<String, List<Transaction>> schoolMap = data.get(loc);
+    for (String sch : schoolMap.keySet()) {
+        System.out.println("  School: [" + sch + "], # transactions: " + schoolMap.get(sch).size());
+    }
+}
