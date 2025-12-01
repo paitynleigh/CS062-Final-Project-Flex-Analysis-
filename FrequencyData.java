@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FrequencyData {
-    // School -> Transaction Count
+    //location -> school -> transaction count
     private Map<String, Map<String, Integer>> data;
 
     public FrequencyData(){
@@ -46,4 +46,3 @@ public class FrequencyData {
 }
 
 }
-
