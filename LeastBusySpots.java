@@ -5,11 +5,14 @@
  */
 public class LeastBusySpots {
 
-    // what should this object be? involves the 3 least busy spots
-
-    // user interaction method, prompting user for specific time
+    // static method, prompting user for specific time
         // gets current day and finds time interval
         // pass to data searching method
+        // does this: List<LocationCount> leastBusy = flex.getTimeData()
+                //.leastBusy(DayOfWeek.MONDAY, LocalTime.of(12, 0), 3);
+                    // update interval to match rounding
+               // System.out.println("Least busy (Mon 12:00 - 12:15): " + leastBusy);
+            }
 
     // method to search dat for least busy times: parameters = day of week and time
         // iterate through all locations @ this day and time and save 3 max number of transactions

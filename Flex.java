@@ -26,17 +26,34 @@ public class Flex {
         //Format Date Correctly
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 
-        // Filter for only the locations of interest
-        // if location.equals || ....
+        
+        // Clean up names
+        // Sagehen?
+        if (location.equals("the Cafe")) {
+            location = "the Cafe (Mudd)";
+        }
+        // Filter for only locations of interest: no dining halls, enterprise
+        if (!location.contains("Enterprise Svcs") &&
+            !location.contains("Malott Commons") &&
+            !location.contains("Collins Dining Hall") &&
+            !location.contains("Hoch - Shanahan") &&
+            !location.contains("McConnell") &&
+            !location.contains("Frank") &&
+            !location.contains("Oldenborg") &&
+            !location.contains("Frary")) {
 
-        //Create Transaction
-        Transaction t = new Transaction(dateTime, amount, location, school);
+            //Create Transaction
+            Transaction t = new Transaction(dateTime, amount, location, school);
 
-        //--- Frequency/School/Location (Flex Overview)---//
-        freqData.add(t);
+            //--- Frequency/School/Location (Flex Overview)---//
+            freqData.add(t);
 
-        //--- Day-Time Analysis (Feature 1)
-        timeData.add(t);
+            //--- Day-Time Analysis (Feature 1)
+            timeData.add(t);
+
+        }
+
+        
     }
 
     public void loadCSV(String filename){
