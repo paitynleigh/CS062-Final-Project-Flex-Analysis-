@@ -26,6 +26,9 @@ public class Flex {
         //Format Date Correctly
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 
+        // Filter for only the locations of interest
+        // if location.equals || ....
+
         //Create Transaction
         Transaction t = new Transaction(dateTime, amount, location, school);
 

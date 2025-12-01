@@ -14,7 +14,10 @@ public class TimeData {
         LocalDateTime dt = t.getTimestamp();
         DayOfWeek day = dt.getDayOfWeek();
         String location = t.getLocation();
-        int interval = dt.getHour() * 4 + dt.getMinute() / 15; // 15-min intervals
+        // this truncates, can we round to nearest?
+        //int interval = dt.getHour() * 4 + dt.getMinute() / 15; // 15-min intervals
+        int totalMinutes = dt.getHour() * 60 + dt.getMinute();
+        int interval = Math.round(totalMinutes / 15.0f); // nearest 15 min interval
 
         //outer map if day not present
         if (!data.containsKey(day)) {
@@ -49,6 +52,7 @@ public class TimeData {
                 sb.append("  Location: ").append(loc).append("\n");
                 Map<Integer, Integer> intervalMap = locationMap.get(loc);
 
+                // interval: number of transactions
                 for (Integer interval : intervalMap.keySet()) {
                     sb.append(interval).append(":").append(intervalMap.get(interval)).append("\n ");
                 }
