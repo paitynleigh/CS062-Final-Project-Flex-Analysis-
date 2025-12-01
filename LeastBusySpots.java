@@ -1,3 +1,8 @@
+import java.util.List;
+import java.util.Scanner;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /***
  * Feature 1: Users will be able to enter the time of day in which they want to find a meal, 
@@ -5,19 +10,42 @@
  */
 public class LeastBusySpots {
 
-    // static method, prompting user for specific time
-        // gets current day and finds time interval
-        // pass to data searching method
-        // does this: List<LocationCount> leastBusy = flex.getTimeData()
-                //.leastBusy(DayOfWeek.MONDAY, LocalTime.of(12, 0), 3);
-                    // update interval to match rounding
-               // System.out.println("Least busy (Mon 12:00 - 12:15): " + leastBusy);
-            }
+    private static DayOfWeek day;
+    private static LocalTime target;
+    private static int limit;
 
-    // method to search dat for least busy times: parameters = day of week and time
-        // iterate through all locations @ this day and time and save 3 max number of transactions
-    
-    // public method that can be called in main to test (puts everything together)
+    /***
+     * Prints the least busy locations based on user input of time
+     * and number of locations
+     * @param t time data passed from main method
+     */
+    public static void findLeastBusy(TimeData t) {
+        // Get user input
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter preferred visit time (H:mm AM) or type 'now' to get current time data:");
+        String timeInput = scan.nextLine();
+        // cast from string to time 
+
+        // parse time input
+        // TO-DO: day = get current day
+
+        if (timeInput.contains("now")) {
+            // target = get current time (as LocalTime)
+        } else {
+            // parse time
+            // get in LocalTime format
+            // target = timeInput.. or manually
+        }
+
+        System.out.println("Enter the number of least busy locations you would like to see: ");
+        limit = scan.nextInt();
+
+        // get desired number of locations and print
+        List<LocationCount> leastBusy = t.leastBusy(day, target, limit);
+        System.out.println("Least busy (" + timeInput + "): " + leastBusy); // add day of week
+
+        scan.close();
+    }
 
 
 }

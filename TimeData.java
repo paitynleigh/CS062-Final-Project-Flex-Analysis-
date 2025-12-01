@@ -17,10 +17,7 @@ public class TimeData {
         LocalDateTime dt = t.getTimestamp();
         DayOfWeek day = dt.getDayOfWeek();
         String location = t.getLocation();
-        // this truncates, can we round to nearest?
-        //int interval = dt.getHour() * 4 + dt.getMinute() / 15; // 15-min intervals
-        int totalMinutes = dt.getHour() * 60 + dt.getMinute();
-        int interval = Math.round(totalMinutes / 15.0f); // nearest 15 min interval
+        int interval = dt.getHour() * 4 + dt.getMinute() / 15; // 15-min intervals
 
         // Get or create the map for this day
         Map<String, Map<Integer, Integer>> locationMap = data.get(day);
@@ -84,7 +81,6 @@ public class TimeData {
                 sb.append("  Location: ").append(loc).append("\n");
                 Map<Integer, Integer> intervalMap = locationMap.get(loc);
 
-
                 // Print only intervals with transactions.
                 // Time intervals now display as HH:mm instead of number 0-95.
                 for (int interval = 0; interval <= 95; interval++) {
@@ -96,7 +92,6 @@ public class TimeData {
                     String label = String.format("%02d:%02d", hour, minute);
 
                     sb.append(label).append(":").append(count).append("\n ");
-
                 }
                 sb.append("\n");
             }
