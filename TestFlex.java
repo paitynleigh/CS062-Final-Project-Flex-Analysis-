@@ -19,8 +19,11 @@ public class TestFlex {
 
         // Example: Top 3 least busy locations for Monday 12:00 - 12:15
         // Returns a List<LocationCount> (location name + summed count)
-        List<LocationCount> leastBusy = flex.getTimeData()
-                .leastBusy(DayOfWeek.MONDAY, LocalTime.of(12, 0), 3);
-        System.out.println("Least busy (Mon 12:00 - 12:15): " + leastBusy);
+        //List<LocationCount> leastBusy = flex.getTimeData()
+                //.leastBusy(DayOfWeek.MONDAY, LocalTime.of(12, 0), 3);
+        //System.out.println("Least busy (Mon 12:00 - 12:15): " + leastBusy);
+
+        // Test LeastBusySpot Class: Feature 1
+        LeastBusySpots.findLeastBusy(flex.getTimeData());
     }
 }   

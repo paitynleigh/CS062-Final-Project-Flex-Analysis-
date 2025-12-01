@@ -32,7 +32,8 @@ public class Flex {
         if (location.equals("the Cafe")) {
             location = "the Cafe (Mudd)";
         }
-        // Filter for only locations of interest: no dining halls, enterprise
+        // Filter for only locations of interest: no dining halls, enterprise, data with not enough entries
+        // To-do: filter for how many entries need to be in the dataset for us to include?
         if (!location.contains("Enterprise Svcs") &&
             !location.contains("Malott Commons") &&
             !location.contains("Collins Dining Hall") &&
@@ -40,7 +41,8 @@ public class Flex {
             !location.contains("McConnell") &&
             !location.contains("Frank") &&
             !location.contains("Oldenborg") &&
-            !location.contains("Frary")) {
+            !location.contains("Frary") &&
+            !location.contains("Pitzer Bernard Cafe")) {
 
             //Create Transaction
             Transaction t = new Transaction(dateTime, amount, location, school);
