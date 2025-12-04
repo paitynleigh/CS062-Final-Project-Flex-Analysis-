@@ -62,9 +62,13 @@ public class LeastBusySpots {
         int flooredIntervals = totalMinutes / 15; 
         int flooredMinutes = flooredIntervals * 15;
         LocalTime startInterval = LocalTime.of(flooredMinutes / 60, flooredMinutes % 60);
-        LocalTime endInterval = LocalTime.of(startInterval.getHour(), startInterval.getMinute() + 15);
-        System.out.println("Least busy (" + day.toString().toLowerCase() + " " + startInterval + " - " + 
-        endInterval + "): " + leastBusy); // add day of week
+        LocalTime endInterval;
+        if(startInterval.getMinute() + 15 >= 60){
+            endInterval = LocalTime.of(startInterval.getHour() + 1, (startInterval.getMinute() + 15) % 60);
+        } else {
+            endInterval = LocalTime.of(startInterval.getHour(), startInterval.getMinute() + 15);
+        }
+        System.out.println("Least busy (" + day.toString().toLowerCase() + " " + startInterval + " - " + endInterval + "): " + leastBusy); // add day of week
 
         scan.close();
     }
