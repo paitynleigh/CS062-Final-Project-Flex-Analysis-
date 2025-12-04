@@ -48,6 +48,9 @@ public class UserInterface {
         //button.setBackground();
     }
 
+    private void createHistogram(){
+        
+    }
 
 
     public static void main(String[] args) {
