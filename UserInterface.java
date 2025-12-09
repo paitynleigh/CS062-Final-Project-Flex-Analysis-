@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class UserInterface {
@@ -79,6 +78,20 @@ public class UserInterface {
         // formatting for the chart screen excluding the return button
         JPanel chartInputPanel = new JPanel(new BorderLayout(10,40));
         JPanel chartCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel histogramPanel = new JPanel(new BorderLayout(10,0));
+        chartInputPanel.add(histogramPanel);
+        // JPanel histogramSideLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // JPanel histogramBottomLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // JPanel histogramCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // chartInputPanel.add(histogramPanel);
+        // histogramSideLabelPanel.setBackground(Color.GREEN);
+        // histogramBottomLabelPanel.setBackground(Color.BLUE);
+        // histogramCenterPanel.setBackground(Color.RED);
+        // histogramPanel.add(histogramSideLabelPanel, BorderLayout.WEST);
+        // histogramPanel.add(histogramBottomLabelPanel, BorderLayout.SOUTH);
+        // histogramPanel.add(histogramCenterPanel);
+ 
+        
 
         JLabel chartVendorInstructions = new JLabel("Vendor:");
         chartCenteringPanel.add(chartVendorInstructions);
@@ -103,9 +116,12 @@ public class UserInterface {
         int currentHours = current.getHour();
         int currentMinutes = current.getMinute();
         String meridiem;
-        if(currentHours >= 12){
+        if(currentHours > 12){
             currentHours = currentHours % 12;
             meridiem = "PM";
+        } else if (currentHours == 0){
+            currentHours = 12;
+            meridiem = "AM";
         } else {
             meridiem = "AM";
         }
@@ -137,6 +153,7 @@ public class UserInterface {
 
         overviewScreen.add(overviewInputPanel);
 
+
         // formatting for the least busy screen excluding the return button
         JPanel leastBusyInputPanel = new JPanel(new BorderLayout(10,40));
         JPanel leastBusyCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20,10));
@@ -151,7 +168,7 @@ public class UserInterface {
         JLabel timeInstruction = new JLabel("Time:");
         formatInstruction(timeInstruction);
         String[] hours = {"1","2","3","4","5","6","7","8","9","10","11","12"};
-        String[] minutes = {"01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"};
+        String[] minutes = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"};
         String[] meridiems = {"AM","PM"};
         JComboBox<String> hourDropdown = new JComboBox<>(hours);
         JLabel colon = new JLabel(":");
@@ -165,8 +182,13 @@ public class UserInterface {
         JButton leastBusyGenerateButton = new JButton("Generate");
         formatGenerateButton(leastBusyGenerateButton);
 
+        leastBusyDayDropdown.setSelectedItem(currentDay);
         hourDropdown.setSelectedItem(String.valueOf(currentHours));
-        minuteDropdown.setSelectedItem(String.valueOf(currentMinutes));
+        if(currentMinutes < 10){
+            minuteDropdown.setSelectedItem("0" + String.valueOf(currentMinutes));
+        } else {
+            minuteDropdown.setSelectedItem(String.valueOf(currentMinutes));
+        }
         meridiemDropdown.setSelectedItem(meridiem);
 
         hourDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
@@ -214,7 +236,6 @@ public class UserInterface {
         formatReturnButton(returnFromLeastBusyButton);
 
 
-
         // add functionality to buttons
         // if any of the buttons on the home screen are pressed, take the user to the correct corresponding screen
         goToChartButton.addActionListener(e -> cardLayout.show(cardPanel, "chartScreen"));
@@ -225,7 +246,7 @@ public class UserInterface {
         returnFromOverviewButton.addActionListener(e -> cardLayout.show(cardPanel, "mainScreen"));
         returnFromLeastBusyButton.addActionListener(e -> cardLayout.show(cardPanel, "mainScreen"));
 
-        chartGenerateButton.addActionListener(e -> createHistogram((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem()));
+        chartGenerateButton.addActionListener(e -> createHistogram((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem(), histogramPanel));
         overviewLocationDropdown.addActionListener(e -> generateOverview((String) overviewLocationDropdown.getSelectedItem()));
         leastBusyGenerateButton.addActionListener(e -> generateLeastBusy((String) leastBusyDayDropdown.getSelectedItem(), (String) hourDropdown.getSelectedItem(), (String) minuteDropdown.getSelectedItem(), (String) meridiemDropdown.getSelectedItem(), Integer.parseInt((String) numLocationsDropdown.getSelectedItem())));
 
@@ -277,8 +298,117 @@ public class UserInterface {
         tp.setFocusable(false);
     }
 
-    private void createHistogram(String location, String day){
+    private void createHistogram(String location, String day, JPanel histogramContainer){
         System.out.println("create histogram for " + location + " on " + day);
+        histogramContainer.removeAll();
+        histogramContainer.revalidate();
+        histogramContainer.repaint();
+        JPanel histogramSideLabelPanel = new JPanel(new BorderLayout(0,0));
+        JPanel maxPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,0,0));
+        JPanel minPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,0,0));
+        JPanel histogramSideLabelCushion = new JPanel();
+        JPanel histogramBottomLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel histogramCenterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
+        //histogramSideLabelPanel.setBackground(Color.GREEN);
+        //histogramBottomLabelPanel.setBackground(Color.GREEN);
+        // histogramSideLabelCushion.setBackground(Color.ORANGE);
+        //histogramCenterPanel.setBackground(Color.RED);
+        // code that generates a HashMap of 15 minute-intervals (repped as Strings) as key to
+        /*
+        test using times intervals repped as Strings and random frequencies
+        */
+        int[] testFrequencies = {8,1,4,10,6,0,3,4,5,7,20,23,4,5,7,1,35,7,5,3,9,2,0,3,21,3,4,43};
+        String startTime = "7:00";
+        String endTime = "5:00";
+        int maxFrequency = 0;
+        for(int i = 0; i < testFrequencies.length; i ++){
+            if(testFrequencies[i] > maxFrequency){
+                maxFrequency = testFrequencies[i];
+            }
+        }
+        JLabel max = new JLabel("" + maxFrequency);
+        max.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        JLabel min = new JLabel("0");
+        min.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        maxPanel.add(max);
+        minPanel.add(min);
+        histogramSideLabelPanel.add(maxPanel, BorderLayout.NORTH);
+        histogramSideLabelPanel.add(minPanel, BorderLayout.SOUTH);
+        JLabel histogramMessage = new JLabel("Displaying 15 minute time intervals at " + location + " on " + day + " from open at " + startTime + " to close at " + endTime);
+        histogramMessage.setFont(new Font(Font.SERIF, Font.BOLD, 16));
+        histogramBottomLabelPanel.add(histogramMessage);
+        int maxHeight = histogramContainer.getHeight() - 30;
+        int maxWidth = histogramContainer.getWidth() - 50;
+        int scalingConstant = maxHeight/maxFrequency;
+        int barWidth = maxWidth/testFrequencies.length;
+        for(int i = 0; i < testFrequencies.length; i ++){
+            JPanel overallPanel = new JPanel(new BorderLayout(0,5));
+            overallPanel.setPreferredSize(new Dimension(barWidth,maxHeight));
+            overallPanel.setMinimumSize(overallPanel.getPreferredSize());
+            JPanel cushionForBorderLeft = new JPanel();
+            JPanel cushionForBorderRight = new JPanel();
+            cushionForBorderLeft.setPreferredSize(new Dimension(1,maxHeight));
+            cushionForBorderRight.setPreferredSize(new Dimension(1,maxHeight));
+
+            // cushionForBorderLeft.setBackground(Color.ORANGE);
+            // cushionForBorderRight.setBackground(Color.ORANGE);
+
+            overallPanel.add(cushionForBorderLeft, BorderLayout.WEST);
+            overallPanel.add(cushionForBorderRight, BorderLayout.EAST);
+            //JLabel timeInterval = new JLabel(testTimes[i]);
+            //overallPanel.add(timeInterval, BorderLayout.SOUTH);
+            //JPanel barPanel = new JPanel(new BorderLayout(0,10));
+            //overallPanel.add(barPanel);
+
+            JPanel histogramBar = new JPanel();
+            histogramBar.setPreferredSize(new Dimension(barWidth,testFrequencies[i]*scalingConstant));
+            histogramBar.setMaximumSize(histogramBar.getPreferredSize());
+            histogramBar.setBackground(Color.BLUE);
+            overallPanel.add(histogramBar, BorderLayout.SOUTH);
+
+
+            //timeInterval.setBackground(Color.GREEN);
+            //timeInterval.setOpaque(true);
+            //barPanel.setBackground(Color.PINK);
+            //overallPanel.setBackground(Color.RED);
+            histogramBar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+            histogramCenterPanel.add(overallPanel);
+        }
+        histogramContainer.add(histogramSideLabelPanel, BorderLayout.WEST);
+        histogramContainer.add(histogramSideLabelCushion, BorderLayout.EAST);
+        histogramContainer.add(histogramBottomLabelPanel, BorderLayout.SOUTH);
+        histogramContainer.add(histogramCenterPanel, BorderLayout.CENTER);
+        /* 
+        for(int i = 0; i < testFrequencies.length; i ++){
+            JPanel barPanel = new JPanel();
+            barPanel.setLayout(new BoxLayout(barPanel, BoxLayout.Y_AXIS));
+            barPanel.setMaximumSize(new Dimension(barWidth,maxHeight));
+            JLabel timeInterval = new JLabel(testTimes[i]);
+            JPanel histogramBar = new JPanel();
+            //histogramBar.setAlignmentX(Component.CENTER_ALIGNMENT);
+            //histogramBar.setAlignmentY(Component.CENTER_ALIGNMENT);
+            histogramBar.setMaximumSize(new Dimension(barWidth,testFrequencies[i]*scalingConstant));
+            //histogramBar.setMaximumSize(histogramBar.getPreferredSize());
+            histogramBar.setBackground(Color.BLUE);
+            barPanel.add(histogramBar);
+            barPanel.add(timeInterval);
+
+            timeInterval.setBackground(Color.GREEN);
+            timeInterval.setOpaque(true);
+            barPanel.setBackground(Color.RED);
+            //barPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, 3));
+            histogramContainer.add(barPanel);
+        }
+        */
+    }
+
+    private JPanel createHistogramBar(int locationNumVisits, int totalNumVisits, String timeInterval){
+        JPanel barPanel = new JPanel();
+        barPanel.setLayout(new BoxLayout(barPanel, BoxLayout.Y_AXIS));
+        barPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        barPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+        
+        return barPanel;
     }
 
     private void generateOverview(String location){
@@ -291,12 +421,9 @@ public class UserInterface {
 
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable(){
-            @Override
-            public void run(){
-                UserInterface  ui = new UserInterface();
-                ui.initialize();
-            }
+        SwingUtilities.invokeLater(() -> {
+            UserInterface  ui = new UserInterface();
+            ui.initialize();
         });
     }
 }
