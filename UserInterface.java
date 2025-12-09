@@ -334,8 +334,8 @@ public class UserInterface {
         minPanel.add(min);
         histogramSideLabelPanel.add(maxPanel, BorderLayout.NORTH);
         histogramSideLabelPanel.add(minPanel, BorderLayout.SOUTH);
-        JLabel histogramMessage = new JLabel("Displaying 15 minute time intervals at " + location + " on " + day + " from open at " + startTime + " to close at " + endTime);
-        histogramMessage.setFont(new Font(Font.SERIF, Font.BOLD, 16));
+        JLabel histogramMessage = new JLabel("Displays number of transactions per 15 minute interval at " + location + " on " + day + "s from open to close (" + startTime + "am-" + endTime + "pm)");
+        histogramMessage.setFont(new Font(Font.SERIF, Font.BOLD, 14));
         histogramBottomLabelPanel.add(histogramMessage);
         int maxHeight = histogramContainer.getHeight() - 30;
         int maxWidth = histogramContainer.getWidth() - 50;
