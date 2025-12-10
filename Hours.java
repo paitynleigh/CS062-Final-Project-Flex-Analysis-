@@ -1,0 +1,73 @@
+
+import java.time.LocalTime;
+import java.util.Arrays;
+
+public class Hours {
+    // class represents the hours during a 24 hour day that a vendor is open accounting full multiple open/closes
+    //
+    private LocalTime[] hours;
+
+    public Hours(LocalTime[] hours){
+        if(hours.length % 2 != 0){
+            System.out.println("Ensure that each opening hour has a corresponding closing hour in the format [O, C, O, C, ...] for the array passed into Hours. These Hours were not set");
+            LocalTime[] noHours = {LocalTime.MIN, LocalTime.MAX};
+            this.hours = noHours;
+            return;
+        }
+        this.hours = hours;
+        Arrays.sort(this.hours);
+    }
+
+    public Hours(double[] hours){
+        LocalTime[] timeHours = Hours.transformDoublestoTime(hours);
+        if(timeHours.length % 2 != 0){
+            System.out.println("Ensure that each opening hour has a corresponding closing hour in the format [O, C, O, C, ...] for the array passed into Hours. These Hours were not set");
+            LocalTime[] noHours = {LocalTime.MIN, LocalTime.MAX};
+            this.hours = noHours;
+            return;
+        }
+        this.hours = timeHours;
+        Arrays.sort(this.hours);
+    }
+
+    public static LocalTime[] transformDoublestoTime(double[] hours){
+        LocalTime[] timeHours = new LocalTime[hours.length];
+        for(int i = 0; i < hours.length; i++){
+            int numHours = (int) hours[i];
+            // get leftover fractional hours by subtracting the numHours from the rawhours double
+            double fractionalHours = hours[i] - numHours;
+            // convert to tenths of seconds 
+            int totalSeconds = (int) Math.round(fractionalHours * 3600);
+            // calculate number of minutes by dividing tenth of seconds by 600
+            int minutes = totalSeconds/60;
+            // get tenth of seconds left by subtracting equivalent amount of minutes
+            int seconds = totalSeconds - 60 * minutes;
+            switch (hours[i]) {
+                case 0.0:
+                    timeHours[i] = LocalTime.MIN;
+                    break;
+                case 24.0:
+                    timeHours[i] = LocalTime.MAX;
+                    break;
+                default:
+                    timeHours[i] = LocalTime.of(numHours,minutes,seconds);
+                    break;
+            }
+        }
+        return timeHours;
+    }
+
+    public LocalTime getFirstOpeningTime(){
+        return hours[0];
+    }
+
+    public LocalTime getLatestCloseTime(){
+        return hours[hours.length];
+    }
+
+
+    public static void main(String[] args) {
+        // testing
+        System.out.println(LocalTime.MIN.toString());
+    }
+}
