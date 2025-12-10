@@ -31,7 +31,11 @@ public class Flex {
         // Sagehen?
         if (location.equals("the Cafe")) {
             location = "the Cafe (Mudd)";
+        } if (location.equals("Sagehen")) {
+            location = "Cafe 47";
         }
+
+
         // Filter for only locations of interest: no dining halls, enterprise, data with not enough entries
         // To-do: filter for how many entries need to be in the dataset for us to include?
         if (!location.contains("Enterprise Svcs") &&
