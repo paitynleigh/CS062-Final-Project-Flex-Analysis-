@@ -72,6 +72,33 @@ public class TimeData {
         return results_limited;
     }
 
+    /***
+     * 
+     * @param location
+     * @param inputtedDay
+     * @return
+     */
+    public int[] transactionsOnTime(String location, String inputtedDay){
+        DayOfWeek day = DayOfWeek.valueOf(inputtedDay.toUpperCase());
+        Map<Integer, Integer> transactionDayData = data.get(day).get(location);
+        int size = transactionDayData.size();
+        int[] transactions = new int[size];
+        int index = 0;
+        for (Map.Entry<Integer, Integer> entry : transactionDayData.entrySet()) {
+            transactions[index] = entry.getValue();
+            index++;
+        }
+        return transactions;
+    }
+
+    public static String formatDay(DayOfWeek day){
+        String formattedDay = day.toString().substring(0,1) + day.toString().substring(1).toLowerCase();
+        return formattedDay;
+    }
+
+    public Map<DayOfWeek, Map<String, Map<Integer, Integer>>> getData() {
+        return data;
+    }
 
     @Override
     public String toString() {
@@ -102,25 +129,5 @@ public class TimeData {
         return sb.toString();
     }
 
-    public int[] transactionsOnTime(String location, String inputtedDay){
-        DayOfWeek day = DayOfWeek.valueOf(inputtedDay.toUpperCase());
-        Map<Integer, Integer> transactionDayData = data.get(day).get(location);
-        int size = transactionDayData.size();
-        int[] transactions = new int[size];
-        int index = 0;
-        for (Map.Entry<Integer, Integer> entry : transactionDayData.entrySet()) {
-            transactions[index] = entry.getValue();
-            index++;
-        }
-        return transactions;
-    }
-
-    public static String formatDay(DayOfWeek day){
-        String formattedDay = day.toString().substring(0,1) + day.toString().substring(1).toLowerCase();
-        return formattedDay;
-    }
-
-    public Map<DayOfWeek, Map<String, Map<Integer, Integer>>> getData() {
-        return data;
-}
+    
 }

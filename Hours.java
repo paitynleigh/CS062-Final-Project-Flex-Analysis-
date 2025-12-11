@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 /**
- * Represents the hours during a 24-hour day that a vendor is open using an array of open and close times
+ * Represents the hours during a 24-hour day that a vendor is open using an array of open and close times.
  */
 public class Hours {
 
@@ -60,6 +60,9 @@ public class Hours {
         return timeHours;
     }
 
+    /**
+     * @return an array of LocalTimes in the format [Open, Close, Open, Close, ...]
+     */
     public LocalTime[] getHours(){
         return hours;
     }
