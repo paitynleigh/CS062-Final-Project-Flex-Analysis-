@@ -41,7 +41,7 @@ public class TimeData {
     /**
      * Find least busy locations in a 15-minute interval
      */
-    public List<LocationCount> leastBusy(DayOfWeek day, LocalTime target, int limit) {
+    public List<LocationCount> leastBusy(DayOfWeek day, LocalTime target, int limit, LocationHours locationHours) {
         if (target == null || limit <= 0) return Collections.emptyList();
 
         Map<String, Map<Integer, Integer>> locationMap = data.get(day);
@@ -52,7 +52,10 @@ public class TimeData {
 
         for (Map.Entry<String, Map<Integer, Integer>> entry : locationMap.entrySet()) {
             int count = entry.getValue().getOrDefault(interval, 0);
-            results.add(new LocationCount(entry.getKey(), count));
+            // if statement to check if location is closed at this time
+            if(locationHours.checkIfOpen(entry.getKey(), formatDay(day), target)){
+                results.add(new LocationCount(entry.getKey(), count));
+            }
         }
 
         // Lowest count first; tie-break by name
@@ -97,5 +100,23 @@ public class TimeData {
             }
         }
         return sb.toString();
+    }
+
+    public int[] transactionsOnTime(String location, String inputtedDay){
+        DayOfWeek day = DayOfWeek.valueOf(inputtedDay.toUpperCase());
+        Map<Integer, Integer> transactionDayData = data.get(day).get(location);
+        int size = transactionDayData.size();
+        int[] transactions = new int[size];
+        int index = 0;
+        for (Map.Entry<Integer, Integer> entry : transactionDayData.entrySet()) {
+            transactions[index] = entry.getValue();
+            index++;
+        }
+        return transactions;
+    }
+
+    public static String formatDay(DayOfWeek day){
+        String formattedDay = day.toString().substring(0,1) + day.toString().substring(1).toLowerCase();
+        return formattedDay;
     }
 }
