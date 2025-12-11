@@ -17,11 +17,12 @@ public class LocationHours {
     public LocationHours(File locationHourData){
         try{
             BufferedReader br = new BufferedReader(new FileReader(locationHourData));
+            br.readLine();
+            br.readLine();
             String singleLocationData = br.readLine();
-            br.readLine();
-            br.readLine();
             // while there are more locations in the file add them to the hashmap
             while (singleLocationData != null) { 
+                System.out.println("Reading next line");
                 addLocationHours(singleLocationData);
                 singleLocationData = br.readLine();
             }
@@ -31,15 +32,76 @@ public class LocationHours {
         }
     }
 
+    /**
+     * Adds one hashmap entry to outer map by parsing a single line from the file
+     * @param singleLocationData
+     */
     private void addLocationHours(String singleLocationData){
-        // takes a line in the general form of the file and adds it to the HashMap
-        // String name;
-        // HashMap<String, Hours> hoursByDay;
-        // name = "";
-        // hoursByDay = new HashMap<String, Hours>();
-        // locationHoursByDay.put(name, hoursByDay);
+        // get location name
+        String name = singleLocationData.substring(0, singleLocationData.indexOf(":"));
+        // save rest
+        String remains = singleLocationData.substring(singleLocationData.indexOf(":") + 1);
+        
+        HashMap<String, Hours> hoursByDay = new HashMap<>();
+        String[] dayEntries = remains.split(",");
+
+        // for each day
+        for (String dayEntry: dayEntries) {
+            // check which day it is using if or switch cases
+            System.out.println(dayEntry);
+            String[] entries = dayEntry.substring(1).split(" ");
+            System.out.println(entries[0]);
+
+            String day = entries[0]; // get day (0 index)
+            double[] times = new double[entries.length - 1];
+            System.out.println(day);
+            
+            // if closed all day leave times as null
+            if (!entries[1].equals("Closed")) {
+                // add remaining entries to new array of doubles 
+                for (int i = 1; i < entries.length; i++) {
+                    times[i - 1] = Double.parseDouble(entries[i]);
+                }
+            }
+
+
+            String newDay;
+            // edit day to full Dayofweek String
+            switch(day) {
+                case "M":
+                    newDay = "Monday";
+                    break;
+                case "Tu":
+                    newDay = "Tuesday";
+                    break;
+                case "W":
+                    newDay = "Wednesday";
+                    break;
+                case "Th":
+                    newDay = "Thursday";
+                    break;
+                case "F":
+                    newDay = "Friday";
+                    break;
+                case "Sa":
+                    newDay = "Saturday";
+                    break;
+                case "Su":
+                    newDay = "Sunday";
+                default:
+                    newDay = "Invalid";
+                    break;
+            }
+            System.out.println(newDay);
+
+            hoursByDay.put(newDay, new Hours(times));
+            
+        }    
+
+        locationHoursByDay.put(name, hoursByDay);
 
         System.out.println(singleLocationData);
+ 
     }
 
     public void getHours(String location, String day){

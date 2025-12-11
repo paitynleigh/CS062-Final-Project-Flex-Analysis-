@@ -10,7 +10,9 @@ public class Hours {
     private LocalTime[] hours;
 
     public Hours(LocalTime[] hours){
-        if(hours.length % 2 != 0){
+        if(hours.length == 0){
+            hours = new LocalTime[0];
+        } else if(hours.length % 2 != 0){
             System.out.println("Ensure that each opening hour has a corresponding closing hour in the format [O, C, O, C, ...] for the array passed into Hours. These Hours were not set");
             LocalTime[] noHours = {LocalTime.MIN, LocalTime.MAX};
             this.hours = noHours;
@@ -22,7 +24,9 @@ public class Hours {
 
     public Hours(double[] hours){
         LocalTime[] timeHours = Hours.transformDoublestoTime(hours);
-        if(timeHours.length % 2 != 0){
+        if(hours.length == 0){
+            hours = new double[0];
+        } else if(timeHours.length % 2 != 0){
             System.out.println("Ensure that each opening hour has a corresponding closing hour in the format [O, C, O, C, ...] for the array passed into Hours. These Hours were not set");
             LocalTime[] noHours = {LocalTime.MIN, LocalTime.MAX};
             this.hours = noHours;
