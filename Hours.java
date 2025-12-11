@@ -2,9 +2,11 @@
 import java.time.LocalTime;
 import java.util.Arrays;
 
+/**
+ * Represents the hours during a 24-hour day that a vendor is open using an array of open and close times
+ */
 public class Hours {
-    // class represents the hours during a 24 hour day that a vendor is open accounting full multiple open/closes
-    //
+
     private LocalTime[] hours;
 
     public Hours(LocalTime[] hours){
