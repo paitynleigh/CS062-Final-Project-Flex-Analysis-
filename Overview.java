@@ -14,7 +14,6 @@ public class Overview {
         this.td = td;
         this.fd = fd;
     }
-    
 
     /**
     *  prints out each location and the LEAST busy week day at that location
