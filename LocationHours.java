@@ -17,22 +17,6 @@ public class LocationHours {
      * @param locationHourData
      */
     public LocationHours(/*File locationHourData*/){
-        // locationHoursByDay = new HashMap<>();
-        // try{
-        //     BufferedReader br = new BufferedReader(new FileReader(locationHourData));
-        //     br.readLine();
-        //     br.readLine();
-        //     String singleLocationData = br.readLine();
-        //     // while there are more locations in the file add them to the hashmap
-        //     while (singleLocationData != null) { 
-        //         System.out.println("Reading next line");
-        //         addLocationHours(singleLocationData);
-        //         singleLocationData = br.readLine();
-        //     }
-        //     br.close();
-        // } catch (IOException e) {
-        //     System.out.println("There was an error loading the location hour data. Please check to see that is formatted correctly");
-        // }
         locationHoursByDay = new HashMap<>();
     }
 
@@ -97,8 +81,8 @@ public class LocationHours {
         return hoursForDay.inRange(time);
     }
 
-    public void getHours(String location, String day){
-        System.out.println("Opens at " + locationHoursByDay.get(location).get(day).getFirstOpeningTime().toString() + " and closes at " + locationHoursByDay.get(location).get(day).getLatestCloseTime().toString());
+    public Hours getHours(String location, String day){
+        return locationHoursByDay.get(location).get(day);
     }
 
 
@@ -108,6 +92,7 @@ public class LocationHours {
         // lh.getHours("Grove House", "Tuesday");
         Flex flex = new Flex();
         flex.loadLocationHours("Data/LocationHoursData");
-        System.out.println("" + flex.getLocationHours().checkIfOpen("Shakedown", "Sunday", LocalTime.of(11,35)));
+        System.out.println("" + flex.getLocationHours().checkIfOpen("HMC - Jays Place", "Saturday", LocalTime.of(1,35)));
+        //flex.getLocationHours().getHours("Shakedown", "Monday");
     }
 }

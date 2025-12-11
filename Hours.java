@@ -1,5 +1,6 @@
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 /**
@@ -69,26 +70,27 @@ public class Hours {
 
     public boolean inRange(LocalTime time){
         for(int i = 0; i < hours.length; i += 2){
-            if(hours[i].compareTo(time) > 0 || hours[i+1].compareTo(time) < 0){
-                return false;
+            if(hours[i].compareTo(time) < 0 && hours[i+1].compareTo(time) > 0){
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
-    public LocalTime getFirstOpeningTime(){
-        return hours[0];
-    }
+    // public LocalTime getFirstOpeningTime(){
+    //     return hours[0];
+    // }
 
-    public LocalTime getLatestCloseTime(){
-        return hours[hours.length];
-    }
+    // public LocalTime getLatestCloseTime(){
+    //     return hours[hours.length];
+    // }
 
     @Override
     public String toString(){
-        String message = "Open from ";
-        for(int i = 0; i < hours.length; i += 2){
-            message += hours[i].toString() + "-" + hours[i+1].toString() + " ";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+        String message = hours[0].format(formatter) + " - " + hours[1].format(formatter);
+        for(int i = 2; i < hours.length; i += 2){
+            message += " and " + hours[i].format(formatter) + "-" + hours[i+1].format(formatter);
         }
         return message;
     }

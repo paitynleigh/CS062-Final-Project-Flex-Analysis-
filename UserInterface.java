@@ -93,9 +93,7 @@ public class UserInterface {
         chartVendorPanel.add(chartVendorInstructions);
         formatInstruction(chartVendorInstructions);
 
-        // String[] locations = getAllLocation();
-        // NEED FUNCTION FOR THIS
-        // String[] test = {"Option 1", "Option 2", "Option 3"};
+
         JComboBox<String> chartLocationDropdown = new JComboBox<>(flexForUI.getAllLocations());
         chartVendorPanel.add(chartLocationDropdown);
         chartLocationDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
@@ -252,7 +250,7 @@ public class UserInterface {
         returnFromOverviewButton.addActionListener(e -> cardLayout.show(cardPanel, "mainScreen"));
         returnFromLeastBusyButton.addActionListener(e -> cardLayout.show(cardPanel, "mainScreen"));
 
-        chartGenerateButton.addActionListener(e -> createHistogram((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem(), histogramPanel));
+        chartGenerateButton.addActionListener(e -> createHistogram((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem(), histogramPanel, flexForUI.getTimeData().transactionsOnTime((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem())));
         overviewLocationDropdown.addActionListener(e -> generateOverview((String) overviewLocationDropdown.getSelectedItem(), overviewResponsePanel));
         leastBusyGenerateButton.addActionListener(e -> generateLeastBusy((String) leastBusyDayDropdown.getSelectedItem(), (String) hourDropdown.getSelectedItem(), (String) minuteDropdown.getSelectedItem(), (String) meridiemDropdown.getSelectedItem(), Integer.parseInt((String) numLocationsDropdown.getSelectedItem()), leastBusyOutputPanel));
 
@@ -304,7 +302,7 @@ public class UserInterface {
         tp.setFocusable(false);
     }
 
-    private void createHistogram(String location, String day, JPanel histogramContainer){
+    private void createHistogram(String location, String day, JPanel histogramContainer, int[] transactionData){
         System.out.println("create histogram for " + location + " on " + day);
         histogramContainer.removeAll();
         histogramContainer.revalidate();
@@ -323,13 +321,12 @@ public class UserInterface {
         /*
         test using times intervals repped as Strings and random frequencies
         */
-        int[] testFrequencies = {8,1,4,10,6,0,3,4,5,7,20,23,4};
-        String startTime = "7:00";
-        String endTime = "5:00";
+        int[] data = transactionData;
+        String timeOverview = flexForUI.getLocationHours().getHours(location, day).toString();
         int maxFrequency = 0;
-        for(int i = 0; i < testFrequencies.length; i ++){
-            if(testFrequencies[i] > maxFrequency){
-                maxFrequency = testFrequencies[i];
+        for(int i = 0; i < data.length; i ++){
+            if(data[i] > maxFrequency){
+                maxFrequency = data[i];
             }
         }
         JLabel max = new JLabel("" + maxFrequency);
@@ -340,14 +337,14 @@ public class UserInterface {
         minPanel.add(min);
         histogramSideLabelPanel.add(maxPanel, BorderLayout.NORTH);
         histogramSideLabelPanel.add(minPanel, BorderLayout.SOUTH);
-        JLabel histogramMessage = new JLabel("Displays number of transactions per 15 minute interval at " + location + " on " + day + "s from open to close (" + startTime + "am-" + endTime + "pm)");
-        histogramMessage.setFont(new Font(Font.SERIF, Font.BOLD, 14));
+        JLabel histogramMessage = new JLabel("Displays number of transactions per 15 minute interval at " + location + " on " + day + "s from " + timeOverview);
+        histogramMessage.setFont(new Font(Font.SERIF, Font.BOLD, 12));
         histogramBottomLabelPanel.add(histogramMessage);
         int maxHeight = histogramContainer.getHeight() - 30;
         int maxWidth = histogramContainer.getWidth() - 50;
         int scalingConstant = maxHeight/maxFrequency;
-        int barWidth = maxWidth/testFrequencies.length;
-        for(int i = 0; i < testFrequencies.length; i ++){
+        int barWidth = maxWidth/data.length;
+        for(int i = 0; i < data.length; i ++){
             JPanel overallPanel = new JPanel(new BorderLayout(0,5));
             overallPanel.setPreferredSize(new Dimension(barWidth,maxHeight));
             overallPanel.setMinimumSize(overallPanel.getPreferredSize());
@@ -364,7 +361,7 @@ public class UserInterface {
             //overallPanel.add(barPanel);
 
             JPanel histogramBar = new JPanel();
-            histogramBar.setPreferredSize(new Dimension(barWidth,testFrequencies[i]*scalingConstant));
+            histogramBar.setPreferredSize(new Dimension(barWidth,data[i]*scalingConstant));
             histogramBar.setMaximumSize(histogramBar.getPreferredSize());
             histogramBar.setBackground(Color.BLUE);
             overallPanel.add(histogramBar, BorderLayout.SOUTH);
@@ -385,6 +382,7 @@ public class UserInterface {
         overviewContainer.add(overviewResponse);
     }
 
+
     private void generateLeastBusy(String day, String hour, String minute, String meridiem, int numLocations, JPanel outputPanel){
         System.out.println(day + hour + minute + meridiem + numLocations);
         outputPanel.removeAll();
@@ -395,6 +393,8 @@ public class UserInterface {
         int hourNoMeridiem = Integer.parseInt(hour);
         if(meridiem.equals("PM") && hourNoMeridiem != 12){
             hourNoMeridiem += 12;
+        } else if (meridiem.equals("AM") && hourNoMeridiem == 12){
+            hourNoMeridiem -= 12;
         }
 
         String message = LeastBusySpots.findLeastBusy(flexForUI.getTimeData(), flexForUI.getLocationHours(), day, String.valueOf(hourNoMeridiem),minute, numLocations);
