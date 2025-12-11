@@ -119,4 +119,8 @@ public class TimeData {
         String formattedDay = day.toString().substring(0,1) + day.toString().substring(1).toLowerCase();
         return formattedDay;
     }
+
+    public Map<DayOfWeek, Map<String, Map<Integer, Integer>>> getData() {
+        return data;
+}
 }
