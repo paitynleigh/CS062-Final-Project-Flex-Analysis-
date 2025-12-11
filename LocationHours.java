@@ -1,18 +1,10 @@
 import java.io.*;
 import java.util.HashMap;
 
-/**
- * This class stores the hours of each location in a HashMap where the key is the location name,
- * and the value is a Hashmap with keys being each day of the week, and values being an Hour
- * object containing hours of that day
- */
 public class LocationHours {
     HashMap<String, HashMap<String, Hours>> locationHoursByDay;
 
-    /**
-     * Constructor to parse lines of location hour data
-     * @param locationHourData
-     */
+
     public LocationHours(File locationHourData){
         try{
             BufferedReader br = new BufferedReader(new FileReader(locationHourData));
@@ -26,7 +18,7 @@ public class LocationHours {
         }
     }
 
-    public void addLocationHours(String locationData){
+    private void addLocationHours(String singleLocationData){
         // takes a line in the general form of the file and adds it to the HashMap
         String name;
         HashMap<String, Hours> hoursByDay;
