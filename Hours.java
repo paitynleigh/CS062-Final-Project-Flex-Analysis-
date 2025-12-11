@@ -49,16 +49,12 @@ public class Hours {
             int minutes = totalSeconds/60;
             // get tenth of seconds left by subtracting equivalent amount of minutes
             int seconds = totalSeconds - 60 * minutes;
-            switch (hours[i]) {
-                case 0.0:
-                    timeHours[i] = LocalTime.MIN;
-                    break;
-                case 24.0:
-                    timeHours[i] = LocalTime.MAX;
-                    break;
-                default:
-                    timeHours[i] = LocalTime.of(numHours,minutes,seconds);
-                    break;
+            if (hours[i] == 0.0) {
+                timeHours[i] = LocalTime.MIN;
+            } else if (hours[i] == 24.0){
+                timeHours[i] = LocalTime.MAX;
+            } else {
+                timeHours[i] = LocalTime.of(numHours,minutes,seconds);
             }
         }
         return timeHours;

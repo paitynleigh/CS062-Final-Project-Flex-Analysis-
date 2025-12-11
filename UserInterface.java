@@ -357,6 +357,10 @@ public class UserInterface {
         int barWidth = maxWidth/data.length;
         for(int i = 0; i < data.length; i ++){
             JPanel overallPanel = new JPanel(new BorderLayout(0,5));
+
+            //JPanel label = new JPanel(new BorderLayout(0,5))
+
+
             overallPanel.setPreferredSize(new Dimension(barWidth,maxHeight));
             overallPanel.setMinimumSize(overallPanel.getPreferredSize());
             JPanel cushionForBorderLeft = new JPanel();
