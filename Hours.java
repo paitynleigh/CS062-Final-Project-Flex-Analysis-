@@ -48,15 +48,32 @@ public class Hours {
             int minutes = totalSeconds/60;
             // get tenth of seconds left by subtracting equivalent amount of minutes
             int seconds = totalSeconds - 60 * minutes;
-            if (hours[i] == 0.0) {
-                timeHours[i] = LocalTime.MIN;
-            } else if (hours[i] == 24.0){
-                timeHours[i] = LocalTime.MAX;
-            } else {
-                timeHours[i] = LocalTime.of(numHours,minutes,seconds);
+            switch (hours[i]) {
+                case 0.0:
+                    timeHours[i] = LocalTime.MIN;
+                    break;
+                case 24.0:
+                    timeHours[i] = LocalTime.MAX;
+                    break;
+                default:
+                    timeHours[i] = LocalTime.of(numHours,minutes,seconds);
+                    break;
             }
         }
         return timeHours;
+    }
+
+    public LocalTime[] getHours(){
+        return hours;
+    }
+
+    public boolean inRange(LocalTime time){
+        for(int i = 0; i < hours.length; i += 2){
+            if(hours[i].compareTo(time) > 0 || hours[i+1].compareTo(time) < 0){
+                return false;
+            }
+        }
+        return true;
     }
 
     public LocalTime getFirstOpeningTime(){
@@ -67,6 +84,7 @@ public class Hours {
         return hours[hours.length];
     }
 
+    @Override
     public String toString(){
         String message = "Open from ";
         for(int i = 0; i < hours.length; i += 2){

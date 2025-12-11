@@ -1,4 +1,5 @@
 import java.io.*;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -15,30 +16,31 @@ public class LocationHours {
      * Constructor to parse lines of location hour data
      * @param locationHourData
      */
-    public LocationHours(File locationHourData){
+    public LocationHours(/*File locationHourData*/){
+        // locationHoursByDay = new HashMap<>();
+        // try{
+        //     BufferedReader br = new BufferedReader(new FileReader(locationHourData));
+        //     br.readLine();
+        //     br.readLine();
+        //     String singleLocationData = br.readLine();
+        //     // while there are more locations in the file add them to the hashmap
+        //     while (singleLocationData != null) { 
+        //         System.out.println("Reading next line");
+        //         addLocationHours(singleLocationData);
+        //         singleLocationData = br.readLine();
+        //     }
+        //     br.close();
+        // } catch (IOException e) {
+        //     System.out.println("There was an error loading the location hour data. Please check to see that is formatted correctly");
+        // }
         locationHoursByDay = new HashMap<>();
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(locationHourData));
-            br.readLine();
-            br.readLine();
-            String singleLocationData = br.readLine();
-            // while there are more locations in the file add them to the hashmap
-            while (singleLocationData != null) { 
-                System.out.println("Reading next line");
-                addLocationHours(singleLocationData);
-                singleLocationData = br.readLine();
-            }
-            br.close();
-        } catch (IOException e) {
-            System.out.println("There was an error loading the location hour data. Please check to see that is formatted correctly");
-        }
     }
 
     /**
      * Adds one hashmap entry to outer map by parsing a single line from the file
      * @param singleLocationData
      */
-    private void addLocationHours(String singleLocationData){
+    public void addLocationHours(String singleLocationData){
         // get location name
         String name = singleLocationData.substring(0, singleLocationData.indexOf(":"));
         // save rest
@@ -87,9 +89,12 @@ public class LocationHours {
         }    
 
         locationHoursByDay.put(name, hoursByDay);
-
-        System.out.println(singleLocationData);
  
+    }
+
+    public boolean checkIfOpen(String location, String day, LocalTime time){
+        Hours hoursForDay = locationHoursByDay.get(location).get(day);
+        return hoursForDay.inRange(time);
     }
 
     public void getHours(String location, String day){
@@ -99,7 +104,10 @@ public class LocationHours {
 
     public static void main(String[] args) {
         // tester
-        LocationHours lh = new LocationHours(new File("Data/LocationHoursData"));
+        //LocationHours lh = new LocationHours(new File("Data/LocationHoursData"));
         // lh.getHours("Grove House", "Tuesday");
+        Flex flex = new Flex();
+        flex.loadLocationHours("Data/LocationHoursData");
+        System.out.println("" + flex.getLocationHours().checkIfOpen("Shakedown", "Sunday", LocalTime.of(11,35)));
     }
 }

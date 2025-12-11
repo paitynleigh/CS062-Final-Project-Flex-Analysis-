@@ -8,13 +8,15 @@ import java.util.Arrays;
 public class Flex {
     private FrequencyData freqData;
     private TimeData timeData;
+    private LocationHours locationHours;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm");
     private HashSet<String> totalLocations;
 
     public Flex(){
         freqData = new FrequencyData();
         timeData = new TimeData();
-        totalLocations = new HashSet<String>();
+        totalLocations = new HashSet<>();
+        locationHours = new LocationHours();
     }
 
     public void rowParse(String line){
@@ -34,8 +36,12 @@ public class Flex {
         // Sagehen?
         if (location.equals("the Cafe")) {
             location = "The Cafe (Mudd)";
-        } if (location.equals("Sagehen")) {
+        } else if (location.equals("Sagehen")) {
             location = "Cafe 47";
+        } else if (location.equals("HMC - Jay's Place")) {
+            location = "HMC - Jays Place";
+        } else if (location.equals("the Hub")) {
+            location = "The Hub";
         }
 
 
@@ -86,6 +92,23 @@ public class Flex {
         }
     }
 
+    public void loadLocationHours(String locationHourData){
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(locationHourData));
+            br.readLine();
+            br.readLine();
+            String singleLocationData = br.readLine();
+            // while there are more locations in the file add them to the hashmap
+            while (singleLocationData != null) { 
+                locationHours.addLocationHours(singleLocationData);
+                singleLocationData = br.readLine();
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("There was an error loading the location hour data. Please check to see that is formatted correctly");
+        }
+    }
+
     /* 
     * Getter Methods for data
     */
@@ -100,6 +123,11 @@ public class Flex {
     public HashSet<String> getHashSet(){
         return totalLocations;
     }
+
+    public LocationHours getLocationHours(){
+        return locationHours;
+    }
+
     public String[] getAllLocations(){
         String[] arrayLocations = new String[totalLocations.size()];
         int counter = 0;

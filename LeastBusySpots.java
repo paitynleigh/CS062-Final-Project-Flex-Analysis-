@@ -24,41 +24,47 @@ public class LeastBusySpots {
      * and number of locations
      * @param t time data passed from main method
      */
-    public static void findLeastBusy(TimeData t) {
+    public static void findLeastBusy(TimeData t, LocationHours locationHours, String inputDay, String inputHour, String inputMinute, String inputLimit) {
         // Get user input
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Enter preferred visit day and time time (Day H:mm XM) or type 'now' to get current time data:");
-        String timeInput = scan.nextLine();
+        // Scanner scan = new Scanner(System.in);
+        // System.out.println("Enter preferred visit day and time time (Day H:mm XM) or type 'now' to get current time data:");
+        // String timeInput = scan.nextLine();
+
+
         // cast from string to time 
 
         // parse time input
         // TO-DO: paste AI conversation where we got this
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE hh:mm a", Locale.ENGLISH);
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("'2025' hh:mm a", Locale.ENGLISH);
 
         try {
             
-            if (timeInput.equalsIgnoreCase("now")) {
-                // target = get current time (as LocalTime)
-                target = LocalDateTime.now().toLocalTime();
-                day = LocalDateTime.now().getDayOfWeek();
-            } else {
+            // if (timeInput.equalsIgnoreCase("now")) {
+            //     // target = get current time (as LocalTime)
+            //     target = LocalDateTime.now().toLocalTime();
+            //     day = LocalDateTime.now().getDayOfWeek();
+            // } else {
                 // parse time
-                target = LocalTime.from(formatter.parse(timeInput.trim()));
-                day = DayOfWeek.from(formatter.parse(timeInput.trim()));
+            // target = LocalTime.from(formatter.parse(inputTime.trim()));
+            // day = DayOfWeek.from(formatter.parse(inputDay.trim()));
+            int hour = Integer.parseInt(inputHour);
+            int minute = Integer.parseInt(inputMinute);
+            target = LocalTime.of(hour, minute);
                 // get in LocalTime format
                 // target = timeInput.. or manually
-            }
+            //}
         } catch (DateTimeParseException e) {
             System.out.println("Invalid time format. Please enter time as Day H:mm XM (e.g., Monday 3:30 PM).");
             return;
         }
         
-
-        System.out.println("Enter the number of least busy locations you would like to see: ");
-        limit = scan.nextInt();
+        day = DayOfWeek.valueOf(inputDay.toUpperCase());
+        // System.out.println("Enter the number of least busy locations you would like to see: ");
+        // limit = scan.nextInt();
+        limit = Integer.parseInt(inputLimit);
 
         // get desired number of locations and print
-        List<LocationCount> leastBusy = t.leastBusy(day, target, limit);
+        List<LocationCount> leastBusy = t.leastBusy(day, target, limit, locationHours);
 
         int totalMinutes = target.getHour() * 60 + target.getMinute();
         int flooredIntervals = totalMinutes / 15; 
@@ -72,8 +78,10 @@ public class LeastBusySpots {
         }
         System.out.println("Least busy (" + day.toString().toLowerCase() + " " + startInterval + " - " + endInterval + "): " + leastBusy); // add day of week
 
-        scan.close();
+        //scan.close();
     }
+
+    
 
 
 }
