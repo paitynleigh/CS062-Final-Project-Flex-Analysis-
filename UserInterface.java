@@ -15,20 +15,23 @@ public class UserInterface {
     }
 
     public void initialize(){
-        // instantiate JFrame with title FLEX
+        // instantiate JFrame with title FLEX, set exit, and set fixed size
         frame = new JFrame("FLEX");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800,500);
         frame.setResizable(false);
         
+        // create panel card layout for easy switching between screens
         CardLayout cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
+        // create 4 main screens all with border layout for easy adding of title and instructions
         mainScreen = new JPanel(new BorderLayout(10,40));
         chartScreen = new JPanel(new BorderLayout(10,40));
         overviewScreen = new JPanel(new BorderLayout(10,40));
         leastBusyScreen = new JPanel(new BorderLayout(10,40));
+        
+        // add the card panel to the frame and all of the screen panels to the card panel
         frame.add(cardPanel);
-
         cardPanel.add(mainScreen, "mainScreen");
         cardPanel.add(chartScreen, "chartScreen");
         cardPanel.add(overviewScreen, "overviewScreen");
@@ -77,35 +80,26 @@ public class UserInterface {
 
         // formatting for the chart screen excluding the return button
         JPanel chartInputPanel = new JPanel(new BorderLayout(10,40));
-        JPanel chartCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel chartCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
+        JPanel chartVendorPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel chartDayPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel histogramPanel = new JPanel(new BorderLayout(10,0));
         chartInputPanel.add(histogramPanel);
-        // JPanel histogramSideLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        // JPanel histogramBottomLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        // JPanel histogramCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        // chartInputPanel.add(histogramPanel);
-        // histogramSideLabelPanel.setBackground(Color.GREEN);
-        // histogramBottomLabelPanel.setBackground(Color.BLUE);
-        // histogramCenterPanel.setBackground(Color.RED);
-        // histogramPanel.add(histogramSideLabelPanel, BorderLayout.WEST);
-        // histogramPanel.add(histogramBottomLabelPanel, BorderLayout.SOUTH);
-        // histogramPanel.add(histogramCenterPanel);
- 
         
 
         JLabel chartVendorInstructions = new JLabel("Vendor:");
-        chartCenteringPanel.add(chartVendorInstructions);
+        chartVendorPanel.add(chartVendorInstructions);
         formatInstruction(chartVendorInstructions);
 
         // String[] locations = getAllLocation();
         // NEED FUNCTION FOR THIS
         String[] test = {"Option 1", "Option 2", "Option 3"};
         JComboBox<String> chartLocationDropdown = new JComboBox<>(test/*locations */);
-        chartCenteringPanel.add(chartLocationDropdown);
+        chartVendorPanel.add(chartLocationDropdown);
         chartLocationDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
 
         JLabel chartDayInstructions = new JLabel("Day:");
-        chartCenteringPanel.add(chartDayInstructions);
+        chartDayPanel.add(chartDayInstructions);
         formatInstruction(chartDayInstructions);
         
         LocalDateTime current = LocalDateTime.now();
@@ -127,8 +121,11 @@ public class UserInterface {
         }
         currentDay = currentDay.charAt(0) + currentDay.substring(1).toLowerCase();
         chartDayDropdown.setSelectedItem(currentDay);
-        chartCenteringPanel.add(chartDayDropdown);
+        chartDayPanel.add(chartDayDropdown);
         chartDayDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+
+        chartCenteringPanel.add(chartVendorPanel);
+        chartCenteringPanel.add(chartDayPanel);
 
 
         JButton chartGenerateButton = new JButton("Generate");
@@ -150,6 +147,9 @@ public class UserInterface {
         overviewLocationDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
 
         overviewInputPanel.add(overviewCenteringPanel, BorderLayout.NORTH);
+
+        JPanel overviewResponsePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        overviewInputPanel.add(overviewResponsePanel);
 
         overviewScreen.add(overviewInputPanel);
 
@@ -247,7 +247,7 @@ public class UserInterface {
         returnFromLeastBusyButton.addActionListener(e -> cardLayout.show(cardPanel, "mainScreen"));
 
         chartGenerateButton.addActionListener(e -> createHistogram((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem(), histogramPanel));
-        overviewLocationDropdown.addActionListener(e -> generateOverview((String) overviewLocationDropdown.getSelectedItem()));
+        overviewLocationDropdown.addActionListener(e -> generateOverview((String) overviewLocationDropdown.getSelectedItem(), overviewResponsePanel));
         leastBusyGenerateButton.addActionListener(e -> generateLeastBusy((String) leastBusyDayDropdown.getSelectedItem(), (String) hourDropdown.getSelectedItem(), (String) minuteDropdown.getSelectedItem(), (String) meridiemDropdown.getSelectedItem(), Integer.parseInt((String) numLocationsDropdown.getSelectedItem())));
 
 
@@ -317,7 +317,7 @@ public class UserInterface {
         /*
         test using times intervals repped as Strings and random frequencies
         */
-        int[] testFrequencies = {8,1,4,10,6,0,3,4,5,7,20,23,4,5,7,1,35,7,5,3,9,2,0,3,21,3,4,43};
+        int[] testFrequencies = {8,1,4,10,6,0,3,4,5,7,20,23,4};
         String startTime = "7:00";
         String endTime = "5:00";
         int maxFrequency = 0;
@@ -350,9 +350,6 @@ public class UserInterface {
             cushionForBorderLeft.setPreferredSize(new Dimension(1,maxHeight));
             cushionForBorderRight.setPreferredSize(new Dimension(1,maxHeight));
 
-            // cushionForBorderLeft.setBackground(Color.ORANGE);
-            // cushionForBorderRight.setBackground(Color.ORANGE);
-
             overallPanel.add(cushionForBorderLeft, BorderLayout.WEST);
             overallPanel.add(cushionForBorderRight, BorderLayout.EAST);
             //JLabel timeInterval = new JLabel(testTimes[i]);
@@ -366,11 +363,6 @@ public class UserInterface {
             histogramBar.setBackground(Color.BLUE);
             overallPanel.add(histogramBar, BorderLayout.SOUTH);
 
-
-            //timeInterval.setBackground(Color.GREEN);
-            //timeInterval.setOpaque(true);
-            //barPanel.setBackground(Color.PINK);
-            //overallPanel.setBackground(Color.RED);
             histogramBar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
             histogramCenterPanel.add(overallPanel);
         }
@@ -378,41 +370,13 @@ public class UserInterface {
         histogramContainer.add(histogramSideLabelCushion, BorderLayout.EAST);
         histogramContainer.add(histogramBottomLabelPanel, BorderLayout.SOUTH);
         histogramContainer.add(histogramCenterPanel, BorderLayout.CENTER);
-        /* 
-        for(int i = 0; i < testFrequencies.length; i ++){
-            JPanel barPanel = new JPanel();
-            barPanel.setLayout(new BoxLayout(barPanel, BoxLayout.Y_AXIS));
-            barPanel.setMaximumSize(new Dimension(barWidth,maxHeight));
-            JLabel timeInterval = new JLabel(testTimes[i]);
-            JPanel histogramBar = new JPanel();
-            //histogramBar.setAlignmentX(Component.CENTER_ALIGNMENT);
-            //histogramBar.setAlignmentY(Component.CENTER_ALIGNMENT);
-            histogramBar.setMaximumSize(new Dimension(barWidth,testFrequencies[i]*scalingConstant));
-            //histogramBar.setMaximumSize(histogramBar.getPreferredSize());
-            histogramBar.setBackground(Color.BLUE);
-            barPanel.add(histogramBar);
-            barPanel.add(timeInterval);
-
-            timeInterval.setBackground(Color.GREEN);
-            timeInterval.setOpaque(true);
-            barPanel.setBackground(Color.RED);
-            //barPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, 3));
-            histogramContainer.add(barPanel);
-        }
-        */
     }
 
-    private JPanel createHistogramBar(int locationNumVisits, int totalNumVisits, String timeInterval){
-        JPanel barPanel = new JPanel();
-        barPanel.setLayout(new BoxLayout(barPanel, BoxLayout.Y_AXIS));
-        barPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        barPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-        
-        return barPanel;
-    }
-
-    private void generateOverview(String location){
+    private void generateOverview(String location, JPanel overviewContainer){
         System.out.println("overview for " + location);
+        JTextArea overviewResponse = new JTextArea("overview for " + location);
+        overviewContainer.setBackground(Color.BLUE);
+        overviewContainer.add(overviewResponse);
     }
 
     private void generateLeastBusy(String day, String hour, String minute, String meridiem, int numLocations){
