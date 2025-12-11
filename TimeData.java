@@ -102,7 +102,7 @@ public class TimeData {
         return sb.toString();
     }
 
-    private String formatDay(DayOfWeek day){
+    public static String formatDay(DayOfWeek day){
         String formattedDay = day.toString().substring(0,1) + day.toString().substring(1).toLowerCase();
         return formattedDay;
     }

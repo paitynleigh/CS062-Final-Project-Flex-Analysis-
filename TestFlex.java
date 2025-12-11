@@ -2,6 +2,8 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 public class TestFlex {
     public static void main(String[] args){
         Flex flex = new Flex();
@@ -25,6 +27,10 @@ public class TestFlex {
         //System.out.println("Least busy (Mon 12:00 - 12:15): " + leastBusy);
 
         // Test LeastBusySpot Class: Feature 1
-        LeastBusySpots.findLeastBusy(flex.getTimeData(), flex.getLocationHours(), "Sunday","18","35", "2");
+        //System.out.println(LeastBusySpots.findLeastBusy(flex.getTimeData(), flex.getLocationHours(), "Sunday","18","35", 4));
+        SwingUtilities.invokeLater(() -> {
+            UserInterface  ui = new UserInterface(flex);
+            ui.initialize();
+        });
     }
 }   

@@ -157,11 +157,14 @@ public class UserInterface {
 
 
         // formatting for the least busy screen excluding the return button
-        JPanel leastBusyInputPanel = new JPanel(new BorderLayout(10,40));
+        JPanel leastBusyInputPanel = new JPanel(new BorderLayout(10,10));
         JPanel leastBusyCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20,10));
+        leastBusyCenteringPanel.setPreferredSize(new Dimension(800,80));
         JPanel dayCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
         JPanel timeCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
         JPanel numLocationsCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
+        JPanel leastBusyOutputPanel = new JPanel(new BorderLayout(0,30));
+
 
         JLabel leastBusyDaysInstruction = new JLabel("Day:");
         formatInstruction(leastBusyDaysInstruction);
@@ -212,7 +215,8 @@ public class UserInterface {
         leastBusyCenteringPanel.add(timeCenteringPanel);
         leastBusyCenteringPanel.add(numLocationsCenteringPanel);
         leastBusyCenteringPanel.add(leastBusyGenerateButton);
-        leastBusyInputPanel.add(leastBusyCenteringPanel);
+        leastBusyInputPanel.add(leastBusyCenteringPanel, BorderLayout.NORTH);
+        leastBusyInputPanel.add(leastBusyOutputPanel);
         leastBusyScreen.add(leastBusyInputPanel);
 
 
@@ -250,7 +254,7 @@ public class UserInterface {
 
         chartGenerateButton.addActionListener(e -> createHistogram((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem(), histogramPanel));
         overviewLocationDropdown.addActionListener(e -> generateOverview((String) overviewLocationDropdown.getSelectedItem(), overviewResponsePanel));
-        leastBusyGenerateButton.addActionListener(e -> generateLeastBusy((String) leastBusyDayDropdown.getSelectedItem(), (String) hourDropdown.getSelectedItem(), (String) minuteDropdown.getSelectedItem(), (String) meridiemDropdown.getSelectedItem(), Integer.parseInt((String) numLocationsDropdown.getSelectedItem())));
+        leastBusyGenerateButton.addActionListener(e -> generateLeastBusy((String) leastBusyDayDropdown.getSelectedItem(), (String) hourDropdown.getSelectedItem(), (String) minuteDropdown.getSelectedItem(), (String) meridiemDropdown.getSelectedItem(), Integer.parseInt((String) numLocationsDropdown.getSelectedItem()), leastBusyOutputPanel));
 
 
         frame.setVisible(true);
@@ -381,17 +385,45 @@ public class UserInterface {
         overviewContainer.add(overviewResponse);
     }
 
-    private void generateLeastBusy(String day, String hour, String minute, String meridiem, int numLocations){
+    private void generateLeastBusy(String day, String hour, String minute, String meridiem, int numLocations, JPanel outputPanel){
         System.out.println(day + hour + minute + meridiem + numLocations);
+        outputPanel.removeAll();
+        outputPanel.revalidate();
+        outputPanel.repaint();
+        //"Least busy (" + TimeData.formatDay(day) + " " + startInterval + " - " + endInterval + "): " +
+
+        int hourNoMeridiem = Integer.parseInt(hour);
+        if(meridiem.equals("PM") && hourNoMeridiem != 12){
+            hourNoMeridiem += 12;
+        }
+
+        String message = LeastBusySpots.findLeastBusy(flexForUI.getTimeData(), flexForUI.getLocationHours(), day, String.valueOf(hourNoMeridiem),minute, numLocations);
+
+
+        JPanel leastBusyOutputHeaderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,20, 5));
+        JPanel leastBusyOutputResponsePanel = new JPanel(new FlowLayout(FlowLayout.CENTER,20, 5));
+
+        JLabel leastBusyOutputHeader = new JLabel("The following are the least busy open locations for " + hour + ":" + minute + " " + meridiem + " on " + day + ":");
+        formatInstruction(leastBusyOutputHeader);
+
+        JTextArea leastBusyOutput = new JTextArea(message);
+        leastBusyOutput.setFont(new Font(Font.SERIF, Font.PLAIN, 22));
+        formatTextArea(leastBusyOutput);
+
+        leastBusyOutputHeaderPanel.add(leastBusyOutputHeader);
+        leastBusyOutputResponsePanel.add(leastBusyOutput);
+        outputPanel.add(leastBusyOutputHeaderPanel, BorderLayout.NORTH);
+        outputPanel.add(leastBusyOutputResponsePanel);
+
     }
 
 
-    public static void main(String[] args) {
-        Flex flex = new Flex();
-        flex.loadCSV("Data/Stored_Value_Transaction_by_Customer__11_39_2025-10-17_11_40_52(Stored_Value_Transaction_by_Cus).csv");
-        SwingUtilities.invokeLater(() -> {
-            UserInterface  ui = new UserInterface(flex);
-            ui.initialize();
-        });
-    }
+    // public static void main(String[] args) {
+    //     Flex flex = new Flex();
+    //     flex.loadCSV("Data/Stored_Value_Transaction_by_Customer__11_39_2025-10-17_11_40_52(Stored_Value_Transaction_by_Cus).csv");
+    //     SwingUtilities.invokeLater(() -> {
+    //         UserInterface  ui = new UserInterface(flex);
+    //         ui.initialize();
+    //     });
+    // }
 }

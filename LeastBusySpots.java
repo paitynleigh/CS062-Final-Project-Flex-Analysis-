@@ -24,7 +24,7 @@ public class LeastBusySpots {
      * and number of locations
      * @param t time data passed from main method
      */
-    public static void findLeastBusy(TimeData t, LocationHours locationHours, String inputDay, String inputHour, String inputMinute, String inputLimit) {
+    public static String findLeastBusy(TimeData t, LocationHours locationHours, String inputDay, String inputHour, String inputMinute, int inputLimit) {
         // Get user input
         // Scanner scan = new Scanner(System.in);
         // System.out.println("Enter preferred visit day and time time (Day H:mm XM) or type 'now' to get current time data:");
@@ -54,17 +54,15 @@ public class LeastBusySpots {
                 // target = timeInput.. or manually
             //}
         } catch (DateTimeParseException e) {
-            System.out.println("Invalid time format. Please enter time as Day H:mm XM (e.g., Monday 3:30 PM).");
-            return;
+            return "Invalid time format. Please enter time as Day H:mm XM (e.g., Monday 3:30 PM).";
         }
         
         day = DayOfWeek.valueOf(inputDay.toUpperCase());
         // System.out.println("Enter the number of least busy locations you would like to see: ");
         // limit = scan.nextInt();
-        limit = Integer.parseInt(inputLimit);
 
         // get desired number of locations and print
-        List<LocationCount> leastBusy = t.leastBusy(day, target, limit, locationHours);
+        List<LocationCount> leastBusy = t.leastBusy(day, target, inputLimit, locationHours);
 
         int totalMinutes = target.getHour() * 60 + target.getMinute();
         int flooredIntervals = totalMinutes / 15; 
@@ -76,7 +74,20 @@ public class LeastBusySpots {
         } else {
             endInterval = LocalTime.of(startInterval.getHour(), startInterval.getMinute() + 15);
         }
-        System.out.println("Least busy (" + day.toString().toLowerCase() + " " + startInterval + " - " + endInterval + "): " + leastBusy); // add day of week
+        String message = "";
+        for(int i = 0; i < leastBusy.size(); i++){
+            message += ((i+1) + ". " + leastBusy.get(i).toString() + "\n");
+        }
+        if(leastBusy.size() == 0){
+            message = "No locations are open at this time";
+        } else if (leastBusy.size() < inputLimit){
+            if (leastBusy.size() == 1){
+                message += "Only 1 location open";
+            } else {
+                message += "Only " + leastBusy.size() + " locations open";
+            }
+        }
+        return message; // add day of week
 
         //scan.close();
     }
