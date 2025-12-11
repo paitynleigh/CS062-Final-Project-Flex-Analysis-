@@ -25,12 +25,12 @@ public class Flex {
 
         //Format Date Correctly
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-        
+
         
         // Clean up names
         // Sagehen?
         if (location.equals("the Cafe")) {
-            location = "the Cafe (Mudd)";
+            location = "The Cafe (Mudd)";
         } if (location.equals("Sagehen")) {
             location = "Cafe 47";
         }
