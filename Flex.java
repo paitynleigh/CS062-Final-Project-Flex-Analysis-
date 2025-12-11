@@ -25,7 +25,7 @@ public class Flex {
 
         //Format Date Correctly
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-
+        
         
         // Clean up names
         // Sagehen?
