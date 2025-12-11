@@ -78,7 +78,7 @@ public class LeastBusySpots {
         for(int i = 0; i < leastBusy.size(); i++){
             message += ((i+1) + ". " + leastBusy.get(i).toString() + "\n");
         }
-        if(leastBusy.size() == 0){
+        if(leastBusy.isEmpty()){
             message = "No locations are open at this time";
         } else if (leastBusy.size() < inputLimit){
             if (leastBusy.size() == 1){

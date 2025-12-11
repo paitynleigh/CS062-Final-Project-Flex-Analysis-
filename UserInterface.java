@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 
@@ -148,7 +149,7 @@ public class UserInterface {
 
         overviewInputPanel.add(overviewCenteringPanel, BorderLayout.NORTH);
 
-        JPanel overviewResponsePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel overviewResponsePanel = new JPanel(new BorderLayout(10,5));
         overviewInputPanel.add(overviewResponsePanel);
 
         overviewScreen.add(overviewInputPanel);
@@ -297,9 +298,19 @@ public class UserInterface {
         title.setVerticalAlignment(SwingConstants.CENTER);
     }
 
-    private void formatTextArea(JTextArea tp){
+    private void formatTextArea(JTextArea ta){
+        ta.setBackground(UIManager.getColor("Panel.background"));
+        ta.setFocusable(false);
+    }
+
+    private void formatTextPane(JTextPane tp, String text){
+        tp.setText(text);
+        tp.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
         tp.setBackground(UIManager.getColor("Panel.background"));
-        tp.setFocusable(false);
+        StyledDocument tpDoc = tp.getStyledDocument();
+        SimpleAttributeSet format = new SimpleAttributeSet();
+        StyleConstants.setAlignment(format, StyleConstants.ALIGN_CENTER);
+        tpDoc.setParagraphAttributes(0, tpDoc.getLength(), format, false);
     }
 
     private void createHistogram(String location, String day, JPanel histogramContainer, int[] transactionData){
@@ -377,10 +388,53 @@ public class UserInterface {
 
     private void generateOverview(String location, JPanel overviewContainer){
         System.out.println("overview for " + location);
-        JTextArea overviewResponse = new JTextArea("overview for " + location);
-        overviewContainer.setBackground(Color.BLUE);
+        overviewContainer.removeAll();
+        overviewContainer.revalidate();
+        overviewContainer.repaint();
+
+        Overview o = new Overview(flexForUI.getTimeData(), flexForUI.getFreqData());
+
+        String leastBusy = correctOverview(o.getLeastBusy(), location);
+        String mostBusy = correctOverview(o.getMostBusy(), location);
+        String schoolTransAmount = o.getTransactionAmountbySchool();
+        String locationTransAmount = correctOverview(o.getTransactionAmountbyLocation(), location);
+        String schoolTotalAmount = o.getTotalAmountbySchool();
+        String locationTotalAmount = correctOverview(o.getTotalAmountbyLocation(), location);
+
+
+        JLabel overviewHeader = new JLabel("Overview for " + location + ":");
+        overviewHeader.setFont(new Font(Font.SERIF, Font.BOLD, 18));
+        JTextPane overviewResponse = new JTextPane();
+        formatTextPane(overviewResponse, leastBusy + "\n" + mostBusy + "\n" + locationTransAmount + "\n" + locationTotalAmount);
+
+        JTextPane schoolResponse = new JTextPane();
+        formatTextPane(schoolResponse, schoolTransAmount + "\n" + schoolTotalAmount);
+
+        JPanel schoolResponsePanel = new JPanel(new BorderLayout(5,5));
+        JLabel schoolHeader = new JLabel("The following are stats based on school, regardless of location:");
+        schoolHeader.setFont(new Font(Font.SERIF, Font.BOLD, 18));
+
+        schoolResponsePanel.add(schoolHeader, BorderLayout.NORTH);
+        schoolResponsePanel.add(schoolResponse);
+        overviewContainer.add(overviewHeader, BorderLayout.NORTH);
+        overviewContainer.add(schoolResponsePanel, BorderLayout.SOUTH);
         overviewContainer.add(overviewResponse);
+
     }
+
+    private String correctOverview(String allLocationData, String location){
+        String[] eachEntry = allLocationData.split("\n");
+        String correctMessage = eachEntry[0];
+        for (String singleLocationData : eachEntry){
+            String name = singleLocationData.substring(0, singleLocationData.indexOf(":"));
+            if(name.equals(location)){
+                correctMessage += singleLocationData;
+            }
+        }
+        return correctMessage;
+    }
+
+
 
 
     private void generateLeastBusy(String day, String hour, String minute, String meridiem, int numLocations, JPanel outputPanel){
@@ -417,13 +471,4 @@ public class UserInterface {
 
     }
 
-
-    // public static void main(String[] args) {
-    //     Flex flex = new Flex();
-    //     flex.loadCSV("Data/Stored_Value_Transaction_by_Customer__11_39_2025-10-17_11_40_52(Stored_Value_Transaction_by_Cus).csv");
-    //     SwingUtilities.invokeLater(() -> {
-    //         UserInterface  ui = new UserInterface(flex);
-    //         ui.initialize();
-    //     });
-    // }
 }

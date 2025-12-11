@@ -18,7 +18,7 @@ public class Overview {
     /**
     *  prints out each location and the LEAST busy week day at that location
     */ 
-    public void printLeastBusy(){
+    public String getLeastBusy(){
         // Average Transactions per week day
         Map<String, Map<DayOfWeek, Double>> averages = computeAveragePerWeekday();
         StringBuilder sb = new StringBuilder();
@@ -39,15 +39,16 @@ public class Overview {
             }
         }
 
-    sb.append(loc + ": " + leastBusy + " (avg. " + leastValue + " transactions) \n");
+    sb.append(loc).append(": ").append(leastBusy).append(" (avg. ").append(leastValue).append(" transactions) \n");
         }
-        System.out.println("Least Busy Day on Average: \n" + sb);
+        return "Least Busy Day on Average: \n" + sb;
     }
+
 
     /**
     *  prints out each location and the Most busy week day at that location
     */ 
-    public void printMostBusy(){
+    public String getMostBusy(){
         // Average Transactions per week day
         Map<String, Map<DayOfWeek, Double>> averages = computeAveragePerWeekday();
         StringBuilder sb = new StringBuilder();
@@ -70,7 +71,7 @@ public class Overview {
 
     sb.append(loc + ": " + mostBusy + " (avg. " + mostValue + " transactions) \n");
         }
-        System.out.println("Most Busy Day on Average: \n" + sb);
+        return "Most Busy Day on Average: \n" + sb;
     }
 
     /*
@@ -118,10 +119,11 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
     return averages;
 }
 
+
     /*
     * prints out the average dollar amount per transaction for each school
     */
-    public void printTransactionAmountbySchool(){
+    public String getTransactionAmountbySchool(){
         Map<String, Map<String, Integer>> counts = fd.getData();
         Map<String, Map<String, Double>> amounts = fd.getTotalAmount();
 
@@ -138,7 +140,7 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
 
             for(String school: schoolCounts.keySet()){
                 //Skip null data for overview
-                if(school.equals("{null}")) continue;
+                if(school.equals("{null}") || school.equals("CUC")) continue;
 
                 //Total Dollar Amount of transactions per School
                 totalAmountPerSchool.put(school, totalAmountPerSchool.getOrDefault(school, 0.0) + schoolAmounts.get(school));
@@ -154,16 +156,16 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
 
             double average = Math.round((totalAmount / totalCount) * 100.0) / 100.0;
 
-            sb.append(school + ": $" + average + "\n");
+            sb.append(school + ": $" + average + "    ");
         }
-        System.out.println("Average Transaction Price by School: \n" + sb);
+        return "Average Transaction Price: \n" + sb;
     }
 
     /*
     * prints out the average dollar amount per transaction for each location
     */
 
-    public void printTransactionAmountbyLocation(){
+    public String getTransactionAmountbyLocation(){
         Map<String, Map<String, Integer>> counts = fd.getData();
         Map<String, Map<String, Double>> amounts = fd.getTotalAmount();
 
@@ -186,13 +188,13 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
 
          sb.append(loc + ": $" + average + "\n");
         }
-        System.out.println("Average Transaction Price by Location: \n" + sb);
+        return "Average Transaction Price by Location: \n" + sb;
     }
 
     /** 
    *prints out the TOTAL dollar amount spent over the semester per school
    */
-    public void printTotalAmountbySchool(){
+    public String getTotalAmountbySchool(){
          Map<String, Map<String, Double>> amounts = fd.getTotalAmount();
 
          //initialize map for school -> total amounts 
@@ -203,7 +205,7 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
 
             for(String school : schoolAmounts.keySet()){
                 //Skip null data for overview
-                if(school.equals("{null}")) continue;
+                if(school.equals("{null}") || school.equals("CUC")) continue;
 
                 //Total Dollar Amount of transactions per School
                 totalAmountPerSchool.put(school, totalAmountPerSchool.getOrDefault(school, 0.0) + schoolAmounts.get(school));
@@ -216,15 +218,15 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
             double totalAmount = totalAmountPerSchool.get(school);
             int roundAmount = (int) totalAmount;
 
-            sb.append(school + ": $" + roundAmount + "\n");
+            sb.append(school + ": $" + roundAmount + "    ");
          }
-        System.out.println("Total Dollar Amount Spent per School: \n" + sb);
+        return "Total Dollar Amount Spent per School: \n" + sb;
     }
 
     /** 
    *prints out the TOTAL dollar amount spent over the semester per location
    */
-    public void printTotalAmountbyLocation(){
+    public String getTotalAmountbyLocation(){
         Map<String, Map<String, Double>> amounts = fd.getTotalAmount();
         StringBuilder sb = new StringBuilder();
 
@@ -239,7 +241,7 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
             int roundAmount = (int) totalAmount;
             sb.append(loc + ": $" + roundAmount + "\n");
         }
-        System.out.println("Total Dollar Amount Spent per Location: \n" + sb);
+        return "Total Dollar Amount Spent: \n" + sb;
     }
 
     public static void main(String[] args){
@@ -248,14 +250,14 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
 
         Overview o = new Overview(flex.getTimeData(), flex.getFreqData());
 
-        //o.printLeastBusy();
-       //o.printMostBusy();
+        System.out.println(o.getLeastBusy());
+        System.out.println(o.getMostBusy());
 
-       //o.printTransactionAmountbySchool();
-       //o.printTransactionAmountbyLocation();
+        System.out.println(o.getTransactionAmountbySchool());
+        System.out.println(o.getTransactionAmountbyLocation());
 
-       //o.printTotalAmountbySchool();
-       //o.printTotalAmountbyLocation();
+        System.out.println(o.getTotalAmountbySchool());
+        System.out.println(o.getTotalAmountbyLocation());
 
     }
 }
