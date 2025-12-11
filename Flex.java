@@ -49,11 +49,12 @@ public class Flex {
             !location.contains("Frank") &&
             !location.contains("Oldenborg") &&
             !location.contains("Frary") &&
-            !location.contains("Pitzer Bernard Cafe")) {
+            !location.contains("Pitzer Bernard Cafe") &&
+            !location.contains("Scripps Store")) {
 
             // add location (only is new because HashSet doesn't allow for duplicate values) into the HashSet
             totalLocations.add(location);
-            
+
             //Create Transaction
             Transaction t = new Transaction(dateTime, amount, location, school);
 

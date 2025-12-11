@@ -67,9 +67,23 @@ public class Hours {
         return hours[hours.length];
     }
 
+    public String toString(){
+        String message = "Open from ";
+        for(int i = 0; i < hours.length; i += 2){
+            message += hours[i].toString() + "-" + hours[i+1].toString() + " ";
+        }
+        return message;
+    }
+
 
     public static void main(String[] args) {
         // testing
         System.out.println(LocalTime.MIN.toString());
+        double[] t1 = {1,2,3,4};
+        Hours h1 = new Hours(t1);
+        LocalTime[] t2 = {LocalTime.MIN, LocalTime.now()};
+        Hours h2 = new Hours(t2);
+        System.out.println(h1.toString());
+        System.out.println(h2.toString());
     }
 }

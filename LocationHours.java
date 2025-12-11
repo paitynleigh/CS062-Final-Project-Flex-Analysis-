@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -15,6 +16,7 @@ public class LocationHours {
      * @param locationHourData
      */
     public LocationHours(File locationHourData){
+        locationHoursByDay = new HashMap<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(locationHourData));
             br.readLine();
@@ -27,7 +29,7 @@ public class LocationHours {
                 singleLocationData = br.readLine();
             }
             br.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("There was an error loading the location hour data. Please check to see that is formatted correctly");
         }
     }
@@ -48,54 +50,39 @@ public class LocationHours {
         // for each day
         for (String dayEntry: dayEntries) {
             // check which day it is using if or switch cases
-            System.out.println(dayEntry);
             String[] entries = dayEntry.substring(1).split(" ");
-            System.out.println(entries[0]);
 
             String day = entries[0]; // get day (0 index)
-            double[] times = new double[entries.length - 1];
-            System.out.println(day);
+
+            double[] times;
             
             // if closed all day leave times as null
             if (!entries[1].equals("Closed")) {
+                times = new double[entries.length - 1];
                 // add remaining entries to new array of doubles 
                 for (int i = 1; i < entries.length; i++) {
                     times[i - 1] = Double.parseDouble(entries[i]);
                 }
+            } else {
+                times = new double[0];
             }
 
 
             String newDay;
             // edit day to full Dayofweek String
-            switch(day) {
-                case "M":
-                    newDay = "Monday";
-                    break;
-                case "Tu":
-                    newDay = "Tuesday";
-                    break;
-                case "W":
-                    newDay = "Wednesday";
-                    break;
-                case "Th":
-                    newDay = "Thursday";
-                    break;
-                case "F":
-                    newDay = "Friday";
-                    break;
-                case "Sa":
-                    newDay = "Saturday";
-                    break;
-                case "Su":
-                    newDay = "Sunday";
-                    break;
-                default:
-                    newDay = "Invalid";
-                    break;
-            }
-            System.out.println(newDay);
+            newDay = switch (day) {
+                case "M" -> "Monday";
+                case "Tu" -> "Tuesday";
+                case "W" -> "Wednesday";
+                case "Th" -> "Thursday";
+                case "F" -> "Friday";
+                case "Sa" -> "Saturday";
+                case "Su" -> "Sunday";
+                default -> "Invalid";
+            };
 
-            hoursByDay.put(newDay, new Hours(times));
+            Hours hoursForDay = new Hours(times);
+            hoursByDay.put(newDay, hoursForDay);
             
         }    
 
@@ -113,6 +100,6 @@ public class LocationHours {
     public static void main(String[] args) {
         // tester
         LocationHours lh = new LocationHours(new File("Data/LocationHoursData"));
-        lh.getHours("Grove House", "Tuesday");
+        // lh.getHours("Grove House", "Tuesday");
     }
 }
