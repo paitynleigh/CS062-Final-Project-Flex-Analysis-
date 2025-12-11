@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -26,28 +27,30 @@ public class LeastBusySpots {
     public static void findLeastBusy(TimeData t) {
         // Get user input
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter preferred visit time (H:mm XM) or type 'now' to get current time data:");
+        System.out.println("Enter preferred visit day and time time (Day H:mm XM) or type 'now' to get current time data:");
         String timeInput = scan.nextLine();
         // cast from string to time 
 
         // parse time input
         // TO-DO: paste AI conversation where we got this
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE hh:mm a", Locale.ENGLISH);
 
         try {
-            day = LocalDateTime.now().getDayOfWeek();
+            
 
             if (timeInput.equalsIgnoreCase("now")) {
                 // target = get current time (as LocalTime)
                 target = LocalDateTime.now().toLocalTime();
+                day = LocalDateTime.now().getDayOfWeek();
             } else {
                 // parse time
-                target = LocalTime.parse(timeInput.trim(), formatter);
+                target = LocalTime.from(formatter.parse(timeInput.trim()));
+                day = DayOfWeek.from(formatter.parse(timeInput.trim()));
                 // get in LocalTime format
                 // target = timeInput.. or manually
             }
         } catch (DateTimeParseException e) {
-            System.out.println("Invalid time format. Please enter time as H:mm XM (e.g., 3:30 PM).");
+            System.out.println("Invalid time format. Please enter time as Day H:mm XM (e.g., Monday 3:30 PM).");
             return;
         }
         
