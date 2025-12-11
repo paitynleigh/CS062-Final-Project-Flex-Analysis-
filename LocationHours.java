@@ -18,10 +18,14 @@ public class LocationHours {
         try{
             BufferedReader br = new BufferedReader(new FileReader(locationHourData));
             String singleLocationData = br.readLine();
+            br.readLine();
+            br.readLine();
             // while there are more locations in the file add them to the hashmap
             while (singleLocationData != null) { 
                 addLocationHours(singleLocationData);
+                singleLocationData = br.readLine();
             }
+            br.close();
         } catch (Exception e) {
             System.out.println("There was an error loading the location hour data. Please check to see that is formatted correctly");
         }
@@ -29,11 +33,13 @@ public class LocationHours {
 
     private void addLocationHours(String singleLocationData){
         // takes a line in the general form of the file and adds it to the HashMap
-        String name;
-        HashMap<String, Hours> hoursByDay;
-        name = "";
-        hoursByDay = new HashMap<String, Hours>();
-        locationHoursByDay.put(name, hoursByDay);
+        // String name;
+        // HashMap<String, Hours> hoursByDay;
+        // name = "";
+        // hoursByDay = new HashMap<String, Hours>();
+        // locationHoursByDay.put(name, hoursByDay);
+
+        System.out.println(singleLocationData);
     }
 
     public void getHours(String location, String day){
@@ -44,5 +50,6 @@ public class LocationHours {
     public static void main(String[] args) {
         // tester
         LocationHours lh = new LocationHours(new File("Data/LocationHoursData"));
+        lh.getHours("Grove House", "Tuesday");
     }
 }
