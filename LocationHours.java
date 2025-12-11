@@ -41,7 +41,7 @@ public class LocationHours {
         String name = singleLocationData.substring(0, singleLocationData.indexOf(":"));
         // save rest
         String remains = singleLocationData.substring(singleLocationData.indexOf(":") + 1);
-        
+
         HashMap<String, Hours> hoursByDay = new HashMap<>();
         String[] dayEntries = remains.split(",");
 
@@ -88,6 +88,7 @@ public class LocationHours {
                     break;
                 case "Su":
                     newDay = "Sunday";
+                    break;
                 default:
                     newDay = "Invalid";
                     break;
