@@ -37,7 +37,6 @@ public class LeastBusySpots {
 
         try {
             
-
             if (timeInput.equalsIgnoreCase("now")) {
                 // target = get current time (as LocalTime)
                 target = LocalDateTime.now().toLocalTime();

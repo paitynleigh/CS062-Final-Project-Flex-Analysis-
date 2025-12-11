@@ -1,16 +1,20 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.io.*;
+import java.util.Arrays;
 
 
 public class Flex {
     private FrequencyData freqData;
     private TimeData timeData;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm");
+    private HashSet<String> totalLocations;
 
     public Flex(){
         freqData = new FrequencyData();
         timeData = new TimeData();
+        totalLocations = new HashSet<String>();
     }
 
     public void rowParse(String line){
@@ -26,7 +30,6 @@ public class Flex {
         //Format Date Correctly
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 
-        
         // Clean up names
         // Sagehen?
         if (location.equals("the Cafe")) {
@@ -48,6 +51,9 @@ public class Flex {
             !location.contains("Frary") &&
             !location.contains("Pitzer Bernard Cafe")) {
 
+            // add location (only is new because HashSet doesn't allow for duplicate values) into the HashSet
+            totalLocations.add(location);
+            
             //Create Transaction
             Transaction t = new Transaction(dateTime, amount, location, school);
 
@@ -88,6 +94,28 @@ public class Flex {
     }
     public TimeData getTimeData(){
         return timeData;
+    }
+
+    public HashSet<String> getHashSet(){
+        return totalLocations;
+    }
+    public String[] getAllLocations(){
+        String[] arrayLocations = new String[totalLocations.size()];
+        int counter = 0;
+        for(String location : totalLocations){
+            System.out.println(location);
+            arrayLocations[counter] = location;
+            counter++;
+        }
+        return arrayLocations;
+    }
+
+    public static void main(String[] args) {
+        // tester
+        Flex flex = new Flex();
+        flex.loadCSV("Data/Stored_Value_Transaction_by_Customer__11_39_2025-10-17_11_40_52(Stored_Value_Transaction_by_Cus).csv");
+        System.out.println(flex.getHashSet().toString());
+        System.out.println(Arrays.toString(flex.getAllLocations()));
     }
 }
 

@@ -3,6 +3,7 @@ import java.awt.*;
 import java.time.LocalDateTime;
 
 public class UserInterface {
+    Flex flexForUI;
     private JFrame frame;
     private JPanel cardPanel;
     private JPanel mainScreen;
@@ -10,7 +11,8 @@ public class UserInterface {
     private JPanel overviewScreen;
     private JPanel leastBusyScreen;
     
-    public UserInterface(){
+    public UserInterface(Flex flex){
+        flexForUI = flex;
         initialize();
     }
 
@@ -93,8 +95,8 @@ public class UserInterface {
 
         // String[] locations = getAllLocation();
         // NEED FUNCTION FOR THIS
-        String[] test = {"Option 1", "Option 2", "Option 3"};
-        JComboBox<String> chartLocationDropdown = new JComboBox<>(test/*locations */);
+        // String[] test = {"Option 1", "Option 2", "Option 3"};
+        JComboBox<String> chartLocationDropdown = new JComboBox<>(flexForUI.getAllLocations());
         chartVendorPanel.add(chartLocationDropdown);
         chartLocationDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
 
@@ -142,7 +144,7 @@ public class UserInterface {
         JLabel overviewVendorInstructions = new JLabel("Vendor:"); 
         overviewCenteringPanel.add(overviewVendorInstructions);
         formatInstruction(overviewVendorInstructions);
-        JComboBox<String> overviewLocationDropdown = new JComboBox<>(test/*locations */);
+        JComboBox<String> overviewLocationDropdown = new JComboBox<>(flexForUI.getAllLocations());
         overviewCenteringPanel.add(overviewLocationDropdown);
         overviewLocationDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
 
@@ -385,8 +387,10 @@ public class UserInterface {
 
 
     public static void main(String[] args) {
+        Flex flex = new Flex();
+        flex.loadCSV("Data/Stored_Value_Transaction_by_Customer__11_39_2025-10-17_11_40_52(Stored_Value_Transaction_by_Cus).csv");
         SwingUtilities.invokeLater(() -> {
-            UserInterface  ui = new UserInterface();
+            UserInterface  ui = new UserInterface(flex);
             ui.initialize();
         });
     }
