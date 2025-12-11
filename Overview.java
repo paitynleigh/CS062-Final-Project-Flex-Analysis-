@@ -250,13 +250,13 @@ private Map<String, Map<DayOfWeek, Double>> computeAveragePerWeekday() {
         Overview o = new Overview(flex.getTimeData(), flex.getFreqData());
 
         //o.printLeastBusy();
-       // o.printMostBusy();
+       //o.printMostBusy();
 
        //o.printTransactionAmountbySchool();
        //o.printTransactionAmountbyLocation();
 
        //o.printTotalAmountbySchool();
-       o.printTotalAmountbyLocation();
+       //o.printTotalAmountbyLocation();
 
     }
 }
