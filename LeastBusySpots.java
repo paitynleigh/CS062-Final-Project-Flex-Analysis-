@@ -17,7 +17,6 @@ public class LeastBusySpots {
     private static LocalTime target;
     private static int limit;
 
-    //TO-DO don't show locations that are closed
 
     /***
      * Prints the least busy locations based on user input of time
