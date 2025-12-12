@@ -8,8 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /***
- * Feature 1: Users will be able to enter the time of day in which they want to find a meal, 
- * and the program will provide them with the three locations likely to be the least busy at that time.
+ * Feature 1: Completes Least Busy feature, by providing the given number of locations likely to be the 
+ * least busy at the given day and time.
  */
 public class LeastBusySpots {
 
@@ -19,9 +19,14 @@ public class LeastBusySpots {
 
 
     /***
-     * Prints the least busy locations based on user input of time
+     * Prints the least busy locations based on given day, time
      * and number of locations
      * @param t time data passed from main method
+     * @param locationHours hours of each location
+     * @param inputDay day to determine least busy location
+     * @param inputHour hour to determine least busy location
+     * @param inputMunite minute to determine least busy location
+     * @param inputLimit number of least busy locations to return
      */
     public static String findLeastBusy(TimeData t, LocationHours locationHours, String inputDay, String inputHour, String inputMinute, int inputLimit) {
         // Get user input
