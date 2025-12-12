@@ -22,11 +22,33 @@ Finally, the third feature, Least Busy, allows users to choose a specific day an
 In order to interact with the features of the project, users should run the TestFlex class, which contains the main method. This will initiate the GUI, which can be navigated using labeled buttons for the features.
 
 ## API Instructions
+
+This project exposes two types of functionality:
+
+User Interface (UI) — launched through the TestFlex main class.
+
+Core Logic Methods — defined in auxiliary classes and callable independently of the UI.
+
+Below is a full description of constructors, public methods, and usage examples for each component.
+
+### 1. UI Entry Point
+
+**Class: `TestFlex`** 
+
+The `TestFlex` class reads in the data, and invokes the UI for interacting with the system. It does not implement the program's primary operations, but invokes the underlying methods defined in other classes.
+
+**Constructor**
+`public static void main(String[] args)` 
+Initializes a new Flex object, reads in the flex data, and invokes the user interface. Entry point if you want to start the visual interface.
+
+To run:
+```java 
+javac *.java
+java TestFlex
+```
+
+
 Instructions on how to call public methods
 That is, you are now writing an API in your README. This could be the same thing as your JavaDocs: What is the method called? What are its inputs and outputs? What is a verbal description of what it does? Don’t forget about constructors!
 For each of your public methods, also include usage examples. What do expected inputs and outputs look like in practice? For example, a usage example for add(x,y) would be add(2, 3) = 5.
 
-notes:
-
-
-"Chart" feature: if nothing new generates, it means the vendor you selected is closed on the selected day.
