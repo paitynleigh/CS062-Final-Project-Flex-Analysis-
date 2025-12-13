@@ -3,15 +3,27 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+/**
+ * class storing the time data for all the flex transactions
+ * @authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
+ */
 public class TimeData {
     //day of week -> location -> interval -> number of transactions
     private Map<DayOfWeek, Map<String, Map<Integer, Integer>>> data;
 
+    /**
+     * Constructor
+     * initializes instance variables
+     */
     public TimeData() {
         // Build maps as we go
         data = new HashMap<>();
     }
 
+    /**
+     * method that adds the transaction to the time data
+     * @param t given Transaction
+     */
     public void add(Transaction t) {
         // Grab day, location, and 15-min bucket
         LocalDateTime dt = t.getTimestamp();
@@ -91,15 +103,27 @@ public class TimeData {
         return transactions;
     }
 
+    /**
+     * format a day to have a uppercase first letter and lowercase for the rest
+     * @param day given day
+     * @return formatted String version of day
+     */
     public static String formatDay(DayOfWeek day){
         String formattedDay = day.toString().substring(0,1) + day.toString().substring(1).toLowerCase();
         return formattedDay;
     }
 
+    /**
+     * returns time data
+     * @return HashMap with time data
+     */
     public Map<DayOfWeek, Map<String, Map<Integer, Integer>>> getData() {
         return data;
     }
 
+    /**
+     * returns String representation of time data
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

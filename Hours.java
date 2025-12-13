@@ -5,12 +5,19 @@ import java.util.Arrays;
 
 /**
  * Represents the hours during a 24-hour day that a vendor is open using an array of open and close times.
+ * @authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
  */
 public class Hours {
-
+    // initialize instance variable
     private LocalTime[] hours;
 
+    /**
+     * Constrctor using LocalTime
+     * @param hours opening and closing hours of store in [O,C,O,C,...] array form
+     */
     public Hours(LocalTime[] hours){
+        // if nothing, initialize an array of length 0
+        // else if check if the formatting of the input is correct and instantiate instance variables
         if(hours.length == 0){
             hours = new LocalTime[0];
         } else if(hours.length % 2 != 0){
@@ -23,8 +30,15 @@ public class Hours {
         Arrays.sort(this.hours);
     }
 
+    /**
+     * Constrctor using doubles
+     * @param hours opening and closing hours of store in [O,C,O,C,...] array form
+     */
     public Hours(double[] hours){
+        // transform double array to an array of LocalTimes
         LocalTime[] timeHours = Hours.transformDoublestoTime(hours);
+        // if nothing, initialize an array of length 0
+        // else if check if the formatting of the input is correct and instantiate instance variables
         if(hours.length == 0){
             hours = new double[0];
         } else if(timeHours.length % 2 != 0){
@@ -37,6 +51,11 @@ public class Hours {
         Arrays.sort(this.hours);
     }
 
+    /**
+     * Method returns a LocalTime array equivalent to the double array passed in
+     * @param hours array of doubles representing opening and closing hours of a location
+     * @return LocalTime array equivalent to the double array passed in
+     */
     public static LocalTime[] transformDoublestoTime(double[] hours){
         LocalTime[] timeHours = new LocalTime[hours.length];
         for(int i = 0; i < hours.length; i++){
@@ -67,6 +86,11 @@ public class Hours {
         return hours;
     }
 
+    /**
+     * Method that returns a boolean based on whether the given time is within the range of its open hours
+     * @param time time being checked
+     * @return boolean based on whether the given time is within the range of its hours
+     */
     public boolean inRange(LocalTime time){
         for(int i = 0; i < hours.length; i += 2){
             if(hours[i].compareTo(time) < 0 && hours[i+1].compareTo(time) > 0){
@@ -76,14 +100,9 @@ public class Hours {
         return false;
     }
 
-    // public LocalTime getFirstOpeningTime(){
-    //     return hours[0];
-    // }
-
-    // public LocalTime getLatestCloseTime(){
-    //     return hours[hours.length];
-    // }
-
+    /**
+     * returns the open hours in a String format
+     */
     @Override
     public String toString(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
@@ -96,7 +115,7 @@ public class Hours {
 
 
     public static void main(String[] args) {
-        // testing
+        // tester
         System.out.println(LocalTime.MIN.toString());
         double[] t1 = {1,2,3,4};
         Hours h1 = new Hours(t1);

@@ -10,6 +10,7 @@ import java.time.format.DateTimeParseException;
 /***
  * Feature 1: Completes Least Busy feature, by providing the given number of locations likely to be the 
  * least busy at the given day and time.
+ * @authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
  */
 public class LeastBusySpots {
 

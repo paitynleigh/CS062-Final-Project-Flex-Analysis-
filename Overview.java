@@ -6,6 +6,7 @@ import java.util.Map;
  * Feature 3: Prints general Information and Analysis using the flex data, including the least busy day on average,
 most busy day on average, average transaction price, total retail over 6 weeks, as well as the average transaction price and total dollar
 amount spent per school at a given location.
+@authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
  */
 
 public class Overview {

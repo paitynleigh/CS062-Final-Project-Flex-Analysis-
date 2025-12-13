@@ -4,14 +4,23 @@ import java.util.HashSet;
 import java.io.*;
 import java.util.Arrays;
 
-
+/**
+ * class storing all of the data for our program in one place
+ * and used for reading the files into the other classes such as TimeData and FreqData
+ * @authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
+ */
 public class Flex {
+    // instance variables
     private FrequencyData freqData;
     private TimeData timeData;
     private LocationHours locationHours;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm");
     private HashSet<String> totalLocations;
 
+    /**
+     * Constructor
+     * Instantiates instance variables
+     */
     public Flex(){
         freqData = new FrequencyData();
         timeData = new TimeData();
@@ -75,6 +84,10 @@ public class Flex {
         
     }
 
+    /**
+     * method that goes through each line on the data and applys the row parser to it
+     * @param filename File containing Flex data
+     */
     public void loadCSV(String filename){
         try(BufferedReader br = new BufferedReader(new FileReader(filename))){
             String line;
@@ -92,12 +105,18 @@ public class Flex {
         }
     }
 
+    /**
+     * method that goes through the data file holding opening and closing hours for locations and add them to the location hours
+     * @param locationHourData pathname for the File containing the location open and close hours
+     */
     public void loadLocationHours(String locationHourData){
         try{
+            // read the first two lines to skip over uneeded pieces of file
             BufferedReader br = new BufferedReader(new FileReader(locationHourData));
             br.readLine();
             br.readLine();
             String singleLocationData = br.readLine();
+            // read each concurrent line into the hashmap
             // while there are more locations in the file add them to the hashmap
             while (singleLocationData != null) { 
                 locationHours.addLocationHours(singleLocationData);
@@ -112,7 +131,6 @@ public class Flex {
     /* 
     * Getter Methods for data
     */
-
     public FrequencyData getFreqData(){
         return freqData;
     }
@@ -128,6 +146,10 @@ public class Flex {
         return locationHours;
     }
 
+    /**
+     * method that ses the HashSet of all locations and returns them as a String array
+     * @return String array of all locations
+     */
     public String[] getAllLocations(){
         String[] arrayLocations = new String[totalLocations.size()];
         int counter = 0;
@@ -140,7 +162,7 @@ public class Flex {
     }
 
     public static void main(String[] args) {
-        // tester
+        // tester method
         Flex flex = new Flex();
         flex.loadCSV("Data/Stored_Value_Transaction_by_Customer__11_39_2025-10-17_11_40_52(Stored_Value_Transaction_by_Cus).csv");
         System.out.println(flex.getHashSet().toString());

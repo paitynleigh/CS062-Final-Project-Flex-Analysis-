@@ -1,8 +1,12 @@
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-
+/**
+ * class that represents a single transaction within the data
+ * @authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
+ */
 public class Transaction {
+    // instance variables
     private LocalDateTime dateTime;
     private double amount;
     private String location;
@@ -11,8 +15,13 @@ public class Transaction {
     private LocalTime time;
     private int dayIndex;
 
-
- 
+    /**
+     * Constructor
+     * @param dateTime give data time
+     * @param amount given amount
+     * @param location given location
+     * @param school purchasers school
+     */
     public Transaction(LocalDateTime dateTime, double amount, String location, String school){
         this.dateTime = dateTime;
         this.amount = amount;
@@ -55,6 +64,9 @@ public class Transaction {
         return dayIndex;
     }
 
+    /**
+     * String representation of a transaction
+     */
     @Override
     public String toString(){
         return day + ", " + time + "," + location + ", " +amount + ", " + school;

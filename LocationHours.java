@@ -7,6 +7,7 @@ import java.util.HashMap;
  * This class stores the hours of each location in a HashMap where the key is the location name,
  * and the value is a Hashmap with keys being each day of the week, and values being an Hour
  * object containing hours of that day
+ * @authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
  */
 
 public class LocationHours {
@@ -76,11 +77,24 @@ public class LocationHours {
  
     }
 
+    /**
+     * Method that takes a location, a day, and a time, and returns whether it is open or not
+     * @param location name of location
+     * @param day name of day
+     * @param time time being checked
+     * @return boolean on whether the location is open at a specific time
+     */
     public boolean checkIfOpen(String location, String day, LocalTime time){
         Hours hoursForDay = locationHoursByDay.get(location).get(day);
         return hoursForDay.inRange(time);
     }
 
+    /**
+     * Takes a location and a day and returns the hours of that place
+     * @param location name of location
+     * @param day name of day
+     * @return the Hours associated with the specified location on the day
+     */
     public Hours getHours(String location, String day){
         return locationHoursByDay.get(location).get(day);
     }
@@ -88,11 +102,8 @@ public class LocationHours {
 
     public static void main(String[] args) {
         // tester
-        //LocationHours lh = new LocationHours(new File("Data/LocationHoursData"));
-        // lh.getHours("Grove House", "Tuesday");
         Flex flex = new Flex();
         flex.loadLocationHours("Data/LocationHoursData");
         System.out.println("" + flex.getLocationHours().checkIfOpen("HMC - Jays Place", "Saturday", LocalTime.of(1,35)));
-        //flex.getLocationHours().getHours("Shakedown", "Monday");
     }
 }

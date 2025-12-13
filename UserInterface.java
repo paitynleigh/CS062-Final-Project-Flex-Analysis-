@@ -10,8 +10,10 @@ import java.time.LocalTime;
  * up a window containing buttons to perform our three features: view a histogram of
  * the average business of a vendor on a given day, see an overview of purchases at
  * each vendor for the first part of the semester, or find the least busy spots at a given time.
+ * @authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
  */
 public class UserInterface {
+    // instance variables
     Flex flexForUI;
     private JFrame frame;
     private JPanel cardPanel;
@@ -20,6 +22,10 @@ public class UserInterface {
     private JPanel overviewScreen;
     private JPanel leastBusyScreen;
     
+    /**
+     * Constructor that initializes Flex being used for UI and instantiates UI
+     * @param flex Flex object being used for data in UI
+     */
     public UserInterface(Flex flex){
         flexForUI = flex;
         initialize();
@@ -75,51 +81,53 @@ public class UserInterface {
         instructionCenteringPanel.add(homeInstructions);
         formatTextArea(homeInstructions);
 
+        // creates panel for buttons on home screen
         JPanel homeButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 50));
-        
-
+        // creates buttons for home screen
         JButton goToChartButton = new JButton("Chart");
         JButton goToOverviewButton = new JButton("Overview");
         JButton goToLeastBusyButton = new JButton("Least Busy");
-
+        // adds buttons to button panel
         homeButtonPanel.add(goToChartButton);
         homeButtonPanel.add(goToOverviewButton);
         homeButtonPanel.add(goToLeastBusyButton);
-        
-
+        // formats button on screen
         formatHomeButton(goToChartButton);
         formatHomeButton(goToOverviewButton);
         formatHomeButton(goToLeastBusyButton);
+        // adds nested panels to the main home screen panel
         homeInstructionPanel.add(homeButtonPanel);
         mainScreen.add(homeInstructionPanel);
 
         // formatting for the chart screen excluding the return button
+        // create all necessary panels
         JPanel chartInputPanel = new JPanel(new BorderLayout(10,40));
         JPanel chartCenteringPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
         JPanel chartVendorPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel chartDayPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel histogramPanel = new JPanel(new BorderLayout(10,0));
         chartInputPanel.add(histogramPanel);
-        
 
+        // create label for vendor instructions
         JLabel chartVendorInstructions = new JLabel("Vendor:");
         chartVendorPanel.add(chartVendorInstructions);
         formatInstruction(chartVendorInstructions);
 
-
-        // chart dropdown
+        // create chart dropdown with location info
         JComboBox<String> chartLocationDropdown = new JComboBox<>(flexForUI.getAllLocations());
         chartVendorPanel.add(chartLocationDropdown);
         chartLocationDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
-
+        
+        // create label for day instructions
         JLabel chartDayInstructions = new JLabel("Day:");
         chartDayPanel.add(chartDayInstructions);
         formatInstruction(chartDayInstructions);
         
+        // get current time of day
         LocalDateTime current = LocalDateTime.now();
-        
         // dropdown to pick day of week 
         String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        // create day dropdown with day info
         JComboBox<String> chartDayDropdown = new JComboBox<>(days);
         String currentDay = current.getDayOfWeek().toString();
         int currentHours = current.getHour();
@@ -135,10 +143,12 @@ public class UserInterface {
             meridiem = "AM";
         }
         currentDay = currentDay.charAt(0) + currentDay.substring(1).toLowerCase();
+        // format day dropdown and set it to the current day
         chartDayDropdown.setSelectedItem(currentDay);
         chartDayPanel.add(chartDayDropdown);
         chartDayDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
 
+        // add necessary nested panels to chartCenteringPanel
         chartCenteringPanel.add(chartVendorPanel);
         chartCenteringPanel.add(chartDayPanel);
 
@@ -192,6 +202,8 @@ public class UserInterface {
         JPanel leastBusyOutputPanel = new JPanel(new BorderLayout(0,30));
 
         // Least Busy Days feature dropdown selection for day, time, number of locations
+        // create all elements that are necessary for the least busy day feature
+        // format and populate those with their necessary information
         JLabel leastBusyDaysInstruction = new JLabel("Day:");
         formatInstruction(leastBusyDaysInstruction);
         JComboBox<String> leastBusyDayDropdown = new JComboBox<>(days);
@@ -223,6 +235,7 @@ public class UserInterface {
         }
         meridiemDropdown.setSelectedItem(meridiem);
 
+        // format text of dropdowns
         hourDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
         minuteDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
         meridiemDropdown.setFont(new Font(Font.SERIF, Font.PLAIN, 18));
@@ -255,6 +268,7 @@ public class UserInterface {
         JButton returnFromOverviewButton = new JButton("Return");
         JButton returnFromLeastBusyButton = new JButton("Return");
 
+        // add all return buttons to their panels and those panels to the bottom of their screens
         chartReturnPanel.add(returnFromChartButton);
         overviewReturnPanel.add(returnFromOverviewButton);
         leastBusyReturnPanel.add(returnFromLeastBusyButton);
@@ -263,7 +277,7 @@ public class UserInterface {
         overviewScreen.add(overviewReturnPanel, BorderLayout.SOUTH);
         leastBusyScreen.add(leastBusyReturnPanel, BorderLayout.SOUTH);
 
-
+        // format all return buttons
         formatReturnButton(returnFromChartButton);
         formatReturnButton(returnFromOverviewButton);
         formatReturnButton(returnFromLeastBusyButton);
@@ -278,12 +292,12 @@ public class UserInterface {
         returnFromChartButton.addActionListener(e -> cardLayout.show(cardPanel, "mainScreen"));
         returnFromOverviewButton.addActionListener(e -> cardLayout.show(cardPanel, "mainScreen"));
         returnFromLeastBusyButton.addActionListener(e -> cardLayout.show(cardPanel, "mainScreen"));
-
+        // implement generate buttons for all three features of the program
         chartGenerateButton.addActionListener(e -> createHistogram((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem(), histogramPanel, flexForUI.getTimeData().transactionsOnTime((String) chartLocationDropdown.getSelectedItem(), (String) chartDayDropdown.getSelectedItem())));
         overviewLocationDropdown.addActionListener(e -> generateOverview((String) overviewLocationDropdown.getSelectedItem(), overviewResponsePanel));
         leastBusyGenerateButton.addActionListener(e -> generateLeastBusy((String) leastBusyDayDropdown.getSelectedItem(), (String) hourDropdown.getSelectedItem(), (String) minuteDropdown.getSelectedItem(), (String) meridiemDropdown.getSelectedItem(), Integer.parseInt((String) numLocationsDropdown.getSelectedItem()), leastBusyOutputPanel));
 
-
+        // set the overall frame to be visible
         frame.setVisible(true);
     }
 
@@ -551,14 +565,22 @@ public class UserInterface {
         
     }
 
+    /**
+     * Takes in a location and the panel that will contain the overview and generates the overview on that panel
+     * @param location name of location
+     * @param overviewContainer panel containing for the overview
+     */
     private void generateOverview(String location, JPanel overviewContainer){
         System.out.println("overview for " + location);
+        // clear the panel if it had anything on it before
         overviewContainer.removeAll();
         overviewContainer.revalidate();
         overviewContainer.repaint();
 
+        // create a new Overview object
         Overview o = new Overview(flexForUI.getTimeData(), flexForUI.getFreqData());
 
+        // get all contents for the overview in a String
         String leastBusy = correctOverview(o.getLeastBusy(), location);
         String mostBusy = correctOverview(o.getMostBusy(), location);
         String schoolTransAmount = o.getTransactionAmountbySchool();
@@ -566,12 +588,13 @@ public class UserInterface {
         String schoolTotalAmount = o.getTotalAmountbySchool();
         String locationTotalAmount = correctOverview(o.getTotalAmountbyLocation(), location);
 
-
+        // create overview for the specific location
         JLabel overviewHeader = new JLabel("Overview for " + location + ":");
         overviewHeader.setFont(new Font(Font.SERIF, Font.BOLD, 18));
         JTextPane overviewResponse = new JTextPane();
         formatTextPane(overviewResponse, leastBusy + "\n" + mostBusy + "\n" + locationTransAmount + "\n" + locationTotalAmount);
 
+        // create data that is the same regardless of location to panel
         JTextPane schoolResponse = new JTextPane();
         formatTextPane(schoolResponse, schoolTransAmount + "\n" + schoolTotalAmount);
 
@@ -579,6 +602,7 @@ public class UserInterface {
         JLabel schoolHeader = new JLabel("The following are stats based on school, regardless of location:");
         schoolHeader.setFont(new Font(Font.SERIF, Font.BOLD, 18));
 
+        // add all of these to the overview container
         schoolResponsePanel.add(schoolHeader, BorderLayout.NORTH);
         schoolResponsePanel.add(schoolResponse);
         overviewContainer.add(overviewHeader, BorderLayout.NORTH);
@@ -587,6 +611,12 @@ public class UserInterface {
 
     }
 
+    /**
+     * Retrieves the correct data based on the location from the entire overview
+     * @param allLocationData String containing overview for all locations
+     * @param location name of wanted location
+     * @return String with overview of only specified location
+     */
     private String correctOverview(String allLocationData, String location){
         String[] eachEntry = allLocationData.split("\n");
         String correctMessage = eachEntry[0];
@@ -599,11 +629,18 @@ public class UserInterface {
         return correctMessage;
     }
 
-
-
-
+    /**
+     * Method that populates the least busy screen with the least busy locations based on user input
+     * @param day inputted day
+     * @param hour inputted hour
+     * @param minute inputted minute
+     * @param meridiem inputted merdiem
+     * @param numLocations inputted number of locations
+     * @param outputPanel panel that will hold the least busy information
+     */
     private void generateLeastBusy(String day, String hour, String minute, String meridiem, int numLocations, JPanel outputPanel){
         System.out.println(day + hour + minute + meridiem + numLocations);
+        // clears the panel with least busy information in case anything is left over
         outputPanel.removeAll();
         outputPanel.revalidate();
         outputPanel.repaint();
@@ -616,19 +653,22 @@ public class UserInterface {
             hourNoMeridiem -= 12;
         }
 
+        // retrieve least busy information
         String message = LeastBusySpots.findLeastBusy(flexForUI.getTimeData(), flexForUI.getLocationHours(), day, String.valueOf(hourNoMeridiem),minute, numLocations);
 
-
+        // create panels for formatting within given panel
         JPanel leastBusyOutputHeaderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,20, 5));
         JPanel leastBusyOutputResponsePanel = new JPanel(new FlowLayout(FlowLayout.CENTER,20, 5));
 
+        // create header for least busy
         JLabel leastBusyOutputHeader = new JLabel("The following are the least busy open locations for " + hour + ":" + minute + " " + meridiem + " on " + day + ":");
         formatInstruction(leastBusyOutputHeader);
-
+        // create text area holding the least busy locations
         JTextArea leastBusyOutput = new JTextArea(message);
         leastBusyOutput.setFont(new Font(Font.SERIF, Font.PLAIN, 22));
         formatTextArea(leastBusyOutput);
 
+        // add elements to the least busy screen
         leastBusyOutputHeaderPanel.add(leastBusyOutputHeader);
         leastBusyOutputResponsePanel.add(leastBusyOutput);
         outputPanel.add(leastBusyOutputHeaderPanel, BorderLayout.NORTH);

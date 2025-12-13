@@ -1,6 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class storing frequency data for locations
+ * @authors Jalen DeLoney, Paityn Richardson, Maren Rusk, and Nate Wehner
+ */
 public class FrequencyData {
     //location -> school -> transaction count
     private Map<String, Map<String, Integer>> data;
@@ -8,11 +12,19 @@ public class FrequencyData {
     // location -> school -> total transaction amount
     private Map<String, Map<String, Double>> totalAmount;
 
+    /**
+     * Constructor
+     * initializes instance variables
+     */
     public FrequencyData(){
         data = new HashMap<>();
         totalAmount = new HashMap<>();
     }
 
+    /**
+     * adds a transaction to our data given a Transaction
+     * @param t given transaction
+     */
     public void add(Transaction t){
         String location = t.getLocation();
         String school = t.getSchool();
@@ -43,7 +55,9 @@ public class FrequencyData {
         return totalAmount;
     }
 
-
+    /**
+     * Gives location with its frequency data
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
